@@ -1,81 +1,1275 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#08172a" />
-  <meta name="description" content="Noble Finance Solutions helps you explore life insurance, retirement income strategies, and long-term care planning with clarity and confidence." />
-  <title>Noble Finance Solutions | Confidence for What Comes Next</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
-  <script defer src="script.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111b3a">
+<meta name="description" content="Noble Finance Solutions helps families explore life insurance, retirement income and long-term care solutions.">
+<title>Noble Finance Solutions | Protect What Matters</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --navy:#111b3a;
+  --navy-light:#1d2c52;
+  --purple:#6654df;
+  --purple-light:#8b7cf5;
+  --gold:#d8ad65;
+  --ivory:#f8f7f4;
+  --white:#ffffff;
+  --text:#17233c;
+  --muted:#68758b;
+  --border:#e7e8ed;
+}
+
+* {box-sizing:border-box}
+
+html {scroll-behavior:smooth}
+
+body {
+  margin:0;
+  font-family:"DM Sans",sans-serif;
+  color:var(--text);
+  background:var(--white);
+}
+
+a {text-decoration:none;color:inherit}
+button {font:inherit;cursor:pointer}
+
+.container {
+  width:min(1180px,90%);
+  margin:auto;
+}
+
+h1,h2,h3 {
+  font-family:Outfit,sans-serif;
+  letter-spacing:-.035em;
+}
+
+h1 {
+  font-size:clamp(3rem,6vw,5.7rem);
+  line-height:1.07;
+  font-weight:700;
+  margin:23px 0;
+}
+
+h2 {
+  font-size:clamp(2rem,4vw,3.5rem);
+  line-height:1.14;
+  margin:15px 0;
+}
+
+p {line-height:1.8}
+
+.eyebrow {
+  color:var(--purple);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+}
+
+.section {padding:105px 0}
+.center {text-align:center}
+
+.section-intro {
+  max-width:630px;
+  margin:15px auto;
+  color:var(--muted);
+}
+
+.btn {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  padding:16px 26px;
+  border-radius:9px;
+  font-size:14px;
+  font-weight:700;
+  border:1px solid transparent;
+  transition:.3s;
+}
+
+.btn:hover {
+  transform:translateY(-3px);
+  box-shadow:0 12px 30px #0002;
+}
+
+.btn-purple {
+  background:var(--purple);
+  color:white;
+}
+
+.btn-gold {
+  background:var(--gold);
+  color:var(--navy);
+}
+
+.btn-white {
+  background:white;
+  color:var(--navy);
+}
+
+.btn-outline {
+  border-color:#ffffff60;
+  color:white;
+}
+
+.btn-dark {
+  background:var(--navy);
+  color:white;
+}
+
+/* NAVIGATION */
+
+header {
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:rgba(17,27,58,.97);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid #ffffff18;
+}
+
+.nav {
+  height:86px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:25px;
+}
+
+.logo {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:white;
+  font-family:Outfit,sans-serif;
+  font-size:23px;
+  font-weight:800;
+}
+
+.logo-icon {
+  background:linear-gradient(135deg,var(--gold),#f4d49a);
+  color:var(--navy);
+  width:43px;
+  height:43px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  font-size:26px;
+  font-weight:800;
+}
+
+.logo small {
+  display:block;
+  font-size:9px;
+  letter-spacing:2.7px;
+  color:#bac5d9;
+  margin-top:2px;
+}
+
+.nav-links {
+  display:flex;
+  gap:32px;
+  align-items:center;
+}
+
+.nav-links a {
+  font-size:14px;
+  color:#d7ddec;
+  transition:.3s;
+}
+
+.nav-links a:hover {color:var(--gold)}
+
+.menu {
+  display:none;
+  background:none;
+  border:0;
+  color:white;
+  font-size:28px;
+}
+
+/* HERO SECTION */
+
+.hero {
+  color:white;
+  background:
+    radial-gradient(circle at 85% 25%,#453d91 0%,transparent 38%),
+    radial-gradient(circle at 5% 95%,#252e68 0%,transparent 42%),
+    var(--navy);
+  overflow:hidden;
+  position:relative;
+}
+
+.hero:before {
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:radial-gradient(#ffffff18 1px,transparent 1px);
+  background-size:26px 26px;
+  mask-image:linear-gradient(to right,transparent,#000);
+  pointer-events:none;
+}
+
+.hero-grid {
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:70px;
+  align-items:center;
+  padding:110px 0 130px;
+  position:relative;
+}
+
+.hero .eyebrow {color:var(--gold)}
+
+.hero h1 span {
+  background:linear-gradient(120deg,#f7d79e,var(--gold));
+  background-clip:text;
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.hero p {
+  color:#bdc7df;
+  font-size:17px;
+  max-width:540px;
+}
+
+.hero-buttons {
+  display:flex;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-top:35px;
+}
+
+.hero-trust {
+  margin-top:49px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:#d5dcef;
+  font-size:13px;
+}
+
+.trust-icon {
+  width:37px;
+  height:37px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#d8ad6525;
+  color:var(--gold);
+}
+
+/* FINANCIAL ILLUSTRATION */
+
+.visual {
+  position:relative;
+  padding:15px;
+  animation:float 7s ease-in-out infinite;
+}
+
+.glass-card {
+  background:linear-gradient(145deg,#ffffff20,#ffffff09);
+  border:1px solid #ffffff35;
+  border-radius:25px;
+  padding:30px;
+  backdrop-filter:blur(20px);
+  box-shadow:0 35px 80px #080e2b77;
+}
+
+.glass-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+.glass-head small {
+  color:#c7c8e4;
+  letter-spacing:1.4px;
+}
+
+.glass-head h3 {
+  font-size:23px;
+  margin:10px 0;
+}
+
+.pill {
+  background:#ffffff20;
+  border:1px solid #ffffff25;
+  border-radius:30px;
+  padding:9px 13px;
+  font-size:11px;
+  white-space:nowrap;
+}
+
+.chart {
+  width:100%;
+  height:auto;
+  margin:30px 0 15px;
+}
+
+.chart-path {
+  stroke-dasharray:900;
+  stroke-dashoffset:900;
+  animation:draw 3s ease forwards;
+}
+
+.chart-stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.chart-stat {
+  background:#ffffff0c;
+  border:1px solid #ffffff20;
+  border-radius:12px;
+  padding:17px 8px;
+  text-align:center;
+}
+
+.chart-stat strong {
+  display:block;
+  font-family:Outfit;
+  font-size:25px;
+  color:var(--gold);
+}
+
+.chart-stat small {
+  color:#c4cee1;
+  font-size:10px;
+}
+
+.floating-tag {
+  position:absolute;
+  top:-14px;
+  right:-10px;
+  background:white;
+  color:var(--navy);
+  padding:18px 22px;
+  border-radius:13px;
+  box-shadow:0 20px 35px #0004;
+  font-size:13px;
+  font-weight:700;
+}
+
+.floating-tag span {color:var(--purple)}
+
+/* HIGHLIGHT STRIP */
+
+.highlights {
+  background:#fff;
+  border-bottom:1px solid var(--border);
+}
+
+.highlight-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+}
+
+.highlight {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:17px;
+  padding:30px;
+  border-right:1px solid var(--border);
+}
+
+.highlight:last-child {border:0}
+
+.highlight-icon {
+  font-size:25px;
+  color:var(--purple);
+}
+
+.highlight strong {
+  display:block;
+  font-size:15px;
+}
+
+.highlight small {
+  display:block;
+  color:var(--muted);
+  margin-top:5px;
+}
+
+/* SERVICE CARDS */
+
+.services {background:var(--ivory)}
+
+.service-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:25px;
+  margin-top:55px;
+}
+
+.service-card {
+  background:white;
+  padding:38px;
+  border-radius:19px;
+  border:1px solid var(--border);
+  transition:.35s;
+  position:relative;
+  overflow:hidden;
+}
+
+.service-card:before {
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:4px;
+  background:linear-gradient(90deg,var(--purple),var(--gold));
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:.35s;
+}
+
+.service-card:hover {
+  transform:translateY(-10px);
+  box-shadow:0 25px 60px #19234214;
+}
+
+.service-card:hover:before {transform:scaleX(1)}
+
+.service-icon {
+  width:69px;
+  height:69px;
+  border-radius:17px;
+  display:grid;
+  place-items:center;
+  background:#f0edff;
+  color:var(--purple);
+  font-size:30px;
+}
+
+.service-card:nth-child(2) .service-icon {
+  background:#fff3df;
+  color:#b28234;
+}
+
+.service-card:nth-child(3) .service-icon {
+  background:#e9f5ff;
+  color:#4078b5;
+}
+
+.service-card h3 {
+  font-size:24px;
+  margin:30px 0 12px;
+}
+
+.service-card p {
+  color:var(--muted);
+  font-size:15px;
+}
+
+.service-card a {
+  display:inline-block;
+  color:var(--purple);
+  font-weight:700;
+  margin-top:22px;
+}
+
+/* ABOUT */
+
+.about-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:85px;
+  align-items:center;
+}
+
+.about-visual {
+  min-height:470px;
+  border-radius:22px;
+  background:linear-gradient(135deg,#18254b,#5847ae);
+  display:grid;
+  place-items:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.orbit {
+  position:absolute;
+  width:350px;
+  height:350px;
+  border:1px solid #ffffff50;
+  border-radius:50%;
+}
+
+.orbit.two {width:255px;height:255px}
+.orbit.three {width:430px;height:430px;opacity:.3}
+
+.about-logo {
+  position:relative;
+  width:160px;
+  height:160px;
+  background:linear-gradient(135deg,#f7dcae,#c99b50);
+  border-radius:32px;
+  display:grid;
+  place-items:center;
+  font:800 105px Outfit;
+  color:var(--navy);
+  box-shadow:0 25px 60px #0004;
+  transform:rotate(-8deg);
+}
+
+.about-text p {color:var(--muted)}
+
+.feature {
+  display:flex;
+  gap:13px;
+  align-items:center;
+  padding:12px 0;
+  font-weight:600;
+}
+
+.feature span {
+  display:grid;
+  place-items:center;
+  width:27px;
+  height:27px;
+  border-radius:50%;
+  background:#ece9ff;
+  color:var(--purple);
+}
+
+/* STEPS */
+
+.process {
+  background:var(--navy);
+  color:white;
+}
+
+.process .eyebrow {color:var(--gold)}
+.process .section-intro {color:#c2cbdd}
+
+.steps {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:35px;
+  margin-top:60px;
+}
+
+.step {
+  padding:32px 25px;
+  border:1px solid #ffffff24;
+  border-radius:16px;
+  background:#ffffff08;
+}
+
+.step-no {
+  font:800 48px Outfit;
+  color:var(--gold);
+}
+
+.step h3 {
+  font-size:24px;
+  margin:20px 0 10px;
+}
+
+.step p {
+  color:#b8c4d9;
+  font-size:15px;
+}
+
+/* TESTIMONIAL-STYLE MESSAGE */
+
+.message {background:#f0eefc}
+
+.message-panel {
+  text-align:center;
+  max-width:850px;
+  margin:auto;
+}
+
+.quote-mark {
+  font-size:75px;
+  font-family:Georgia,serif;
+  color:var(--purple);
+  line-height:1;
+}
+
+.message h2 {
+  font-size:clamp(1.8rem,3.5vw,3rem);
+  font-weight:500;
+}
+
+.message p {color:var(--muted)}
+
+/* FAQ */
+
+.faq-grid {
+  display:grid;
+  grid-template-columns:.8fr 1.2fr;
+  gap:75px;
+}
+
+details {
+  padding:23px 0;
+  border-bottom:1px solid var(--border);
+}
+
+summary {
+  cursor:pointer;
+  font-weight:700;
+  font-size:16px;
+}
+
+details p {
+  color:var(--muted);
+  margin-bottom:0;
+}
+
+/* CONTACT */
+
+.contact {
+  padding:95px 0;
+  background:var(--ivory);
+}
+
+.contact-panel {
+  background:linear-gradient(120deg,var(--navy),#3b327b);
+  color:white;
+  padding:85px 40px;
+  text-align:center;
+  border-radius:25px;
+  position:relative;
+  overflow:hidden;
+}
+
+.contact-panel:before {
+  content:"";
+  position:absolute;
+  width:350px;
+  height:350px;
+  border:1px solid #ffffff30;
+  border-radius:50%;
+  right:-140px;
+  top:-150px;
+}
+
+.contact-panel h2 {
+  max-width:700px;
+  margin:20px auto;
+}
+
+.contact-panel p {
+  color:#c8d0e8;
+  margin-bottom:35px;
+}
+
+/* FOOTER */
+
+footer {
+  background:#0b1430;
+  color:#aebad0;
+  padding:70px 0 25px;
+}
+
+.footer-grid {
+  display:grid;
+  grid-template-columns:1.5fr 1fr 1fr;
+  gap:60px;
+  padding-bottom:55px;
+}
+
+footer p {font-size:14px}
+
+footer h4 {
+  color:white;
+  font:700 16px Outfit;
+  margin-top:0;
+}
+
+.footer-links {
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+  font-size:14px;
+}
+
+.footer-links a:hover {color:var(--gold)}
+
+.copyright {
+  border-top:1px solid #ffffff20;
+  padding-top:23px;
+  font-size:12px;
+  line-height:1.8;
+}
+
+/* ANIMATIONS */
+
+.reveal {
+  opacity:0;
+  transform:translateY(30px);
+  transition:opacity .75s,transform .75s;
+}
+
+.reveal.active {
+  opacity:1;
+  transform:translateY(0);
+}
+
+@keyframes float {
+  0%,100% {transform:translateY(0)}
+  50% {transform:translateY(-13px)}
+}
+
+@keyframes draw {
+  to {stroke-dashoffset:0}
+}
+
+/* MOBILE */
+
+@media(max-width:950px) {
+  .hero-grid,.about-grid,.faq-grid {
+    grid-template-columns:1fr;
+    gap:55px;
+  }
+
+  .service-grid,.steps,.footer-grid {
+    grid-template-columns:1fr;
+  }
+
+  .hero-grid {padding:85px 0}
+
+  .nav-links {
+    display:none;
+    position:absolute;
+    top:86px;
+    left:0;
+    right:0;
+    padding:28px 6%;
+    flex-direction:column;
+    align-items:stretch;
+    background:var(--navy);
+  }
+
+  .nav-links.open {display:flex}
+  .menu {display:block}
+  .section {padding:75px 0}
+
+  .highlight-grid {grid-template-columns:1fr}
+  .highlight {
+    justify-content:flex-start;
+    border-right:0;
+    border-bottom:1px solid var(--border);
+  }
+}
+
+@media(max-width:550px) {
+  .glass-card {padding:20px}
+  .floating-tag {right:0;top:-25px}
+  .chart-stat strong {font-size:20px}
+  .contact-panel {padding:60px 22px}
+  .hero-buttons {flex-direction:column;align-items:stretch}
+  .about-visual {min-height:350px}
+}
+
+@media(prefers-reduced-motion:reduce) {
+  *,*:before,*:after {
+    animation:none!important;
+    transition:none!important;
+    scroll-behavior:auto!important;
+  }
+  .reveal {opacity:1;transform:none}
+}
+</style>
 </head>
+
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <div class="topbar"><span class="topbar-dot"></span> Clarity today. Confidence tomorrow. <a href="#contact">Let's talk <span aria-hidden="true">↗</span></a></div>
-  <header class="site-header" id="top">
-    <div class="container nav-wrap">
-      <a class="brand" href="#top" aria-label="Noble Finance Solutions home">
-        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 42 42" fill="none"><path d="M8 30V11l13 16 13-16v19" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><path d="M8 35h26" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></span>
-        <span class="brand-text">NOBLE<span>FINANCE SOLUTIONS</span></span>
-      </a>
-      <nav class="desktop-nav" aria-label="Main navigation">
-        <a href="#about">About</a><a href="#services">Solutions</a><a href="#approach">Our approach</a><a href="#faq">FAQs</a>
-      </nav>
-      <a class="button button-small nav-cta" href="#contact">Schedule a conversation <span aria-hidden="true">↗</span></a>
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu"><span></span><span></span><span></span></button>
+
+<header>
+  <nav class="nav container">
+    <a href="#home" class="logo" aria-label="Noble Finance Solutions home">
+      <div class="logo-icon">N</div>
+      <div>NOBLE<small>FINANCE SOLUTIONS</small></div>
+    </a>
+
+    <div class="nav-links" id="navLinks">
+      <a href="#home">Home</a>
+      <a href="#about">About Us</a>
+      <a href="#services">Our Services</a>
+      <a href="#process">How It Works</a>
+      <a href="#contact" class="btn btn-gold">Book a Consultation ↗</a>
     </div>
-    <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation" hidden><a href="#about">About</a><a href="#services">Solutions</a><a href="#approach">Our approach</a><a href="#faq">FAQs</a><a href="#contact">Let's connect ↗</a></nav>
-  </header>
 
-  <main id="main">
-    <section class="hero dark-section">
-      <div class="hero-glow" aria-hidden="true"></div>
-      <div class="container hero-grid">
-        <div class="hero-copy reveal">
-          <div class="eyebrow light"><span class="pill-line"></span> YOUR FUTURE, THOUGHTFULLY PLANNED</div>
-          <h1>Financial peace of mind <em>starts here.</em></h1>
-          <p class="hero-lead">Protect what matters. Plan for what’s next. Make confident decisions with personalized guidance for life insurance, retirement income, and long-term care.</p>
-          <div class="hero-actions"><a class="button button-primary" href="#contact">Start your conversation <span aria-hidden="true">↗</span></a><a class="text-link" href="#services">Explore our solutions <span aria-hidden="true">↗</span></a></div>
-          <div class="hero-proof"><div class="proof-icons" aria-hidden="true"><span>✦</span><span>✓</span><span>↗</span></div><div>Personal guidance.<br /><strong>Solutions designed around you.</strong></div></div>
-        </div>
-        <div class="hero-visual reveal" aria-label="An illustration showing steady long-term financial progress">
-          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
-          <div class="visual-top"><span class="status-pulse"></span> BUILDING A STRONGER TOMORROW</div>
-          <div class="dashboard-card">
-            <div class="dashboard-header"><div><small>YOUR FINANCIAL FUTURE</small><h2>Plan with purpose.</h2></div><div class="chart-badge">↗</div></div>
-            <div class="graph"><div class="graph-grid"></div><svg viewBox="0 0 480 230" preserveAspectRatio="none" role="img" aria-label="Stylized upward growth curve"><defs><linearGradient id="fillChart" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7de5b3" stop-opacity=".26"/><stop offset="1" stop-color="#7de5b3" stop-opacity="0"/></linearGradient></defs><path d="M0 193 C56 183 72 166 120 169 S190 126 226 140 S300 91 339 99 S423 27 480 26 L480 230 L0 230Z" fill="url(#fillChart)"/><path d="M0 193 C56 183 72 166 120 169 S190 126 226 140 S300 91 339 99 S423 27 480 26" fill="none" stroke="#91f2c1" stroke-width="4" stroke-linecap="round"/><circle cx="480" cy="26" r="7" fill="#91f2c1" stroke="#122a3a" stroke-width="5"/></svg></div>
-            <div class="dashboard-bottom"><span><i class="key-dot"></i> Protection</span><span><i class="key-dot second"></i> Preparation</span><span><i class="key-dot third"></i> Peace of mind</span></div>
+    <button class="menu" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- HERO -->
+
+<section id="home" class="hero">
+  <div class="container hero-grid">
+
+    <div class="reveal">
+      <div class="eyebrow">WELCOME TO NOBLE FINANCE SOLUTIONS</div>
+
+      <h1>
+        Your Future.<br>
+        Your Legacy.<br>
+        <span>Our Priority.</span>
+      </h1>
+
+      <p>
+        Helping individuals and families make confident financial
+        decisions through thoughtful life insurance, retirement
+        income and long-term care solutions.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="#contact" class="btn btn-gold">
+          Start Your Journey ↗
+        </a>
+        <a href="#services" class="btn btn-outline">
+          Explore Our Services
+        </a>
+      </div>
+
+      <div class="hero-trust">
+        <span class="trust-icon">✓</span>
+        Your goals deserve a thoughtful financial strategy.
+      </div>
+    </div>
+
+    <div class="visual reveal">
+      <div class="floating-tag">
+        ✦ <span>Building Brighter Futures</span>
+      </div>
+
+      <div class="glass-card">
+        <div class="glass-head">
+          <div>
+            <small>YOUR FINANCIAL JOURNEY</small>
+            <h3>Tomorrow Starts Today</h3>
           </div>
-          <div class="floating-card floating-one"><div class="floating-icon">✳</div><span>Protect what matters<strong>Life's important moments</strong></span></div>
-          <div class="floating-card floating-two"><div class="floating-icon">◎</div><span>Plan for tomorrow<strong>A future with intention</strong></span></div>
+          <div class="pill">● Future Focused</div>
+        </div>
+
+        <svg class="chart" viewBox="0 0 500 260" role="img" aria-label="Decorative illustration of an upward planning journey">
+          <defs>
+            <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#d8ad65" stop-opacity=".35"/>
+              <stop offset="1" stop-color="#d8ad65" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+
+          <g stroke="#ffffff22" fill="none">
+            <path d="M0 40H500M0 95H500M0 150H500M0 205H500M0 255H500"/>
+          </g>
+
+          <path d="M0 230 C65 220 90 180 130 188 S205 140 250 145 S325 93 365 100 S450 35 500 20 L500 260H0Z"
+                fill="url(#chartFill)"/>
+
+          <path class="chart-path"
+                d="M0 230 C65 220 90 180 130 188 S205 140 250 145 S325 93 365 100 S450 35 500 20"
+                stroke="#e4b968" stroke-width="5"
+                stroke-linecap="round" fill="none"/>
+
+          <circle cx="495" cy="21" r="8" fill="#f3d59b"/>
+        </svg>
+
+        <div class="chart-stats">
+          <div class="chart-stat">
+            <strong>01</strong>
+            <small>PROTECT</small>
+          </div>
+          <div class="chart-stat">
+            <strong>02</strong>
+            <small>PREPARE</small>
+          </div>
+          <div class="chart-stat">
+            <strong>03</strong>
+            <small>PROGRESS</small>
+          </div>
         </div>
       </div>
-      <div class="hero-bottom container"><span>PROTECTION</span><span class="separator">•</span><span>PLANNING</span><span class="separator">•</span><span>PEACE OF MIND</span></div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section class="intro section-pad" id="about"><div class="container intro-layout"><div><div class="eyebrow">A MORE PERSONAL WAY TO PLAN</div><h2>It's not just about finances. <span>It's about your life.</span></h2></div><div class="intro-right"><p>Great financial decisions start with meaningful conversations. At Noble Finance Solutions, the focus is on understanding your goals and helping you explore protection and planning options that fit your needs.</p><a class="inline-arrow" href="#approach">Get to know our approach <span>↗</span></a></div></div></section>
+<!-- HIGHLIGHTS -->
 
-    <section class="services section-pad" id="services"><div class="container"><div class="section-heading"><div><div class="eyebrow">HOW WE CAN HELP</div><h2>Solutions for every <span>chapter of life.</span></h2></div><p>Real life is rarely one-size-fits-all. Explore guidance tailored to your priorities today and your goals for tomorrow.</p></div>
-      <div class="service-grid">
-        <article class="service-card"><div class="service-num">01 / PROTECTION</div><div class="service-icon"><svg viewBox="0 0 48 48" fill="none"><path d="M24 4 40 11v12c0 11-7 17-16 21C15 40 8 34 8 23V11L24 4Z" stroke="currentColor" stroke-width="2.5"/><path d="m17 24 5 5 10-11" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Life insurance</h3><p>Explore coverage designed to provide financial protection for your loved ones when they need it most.</p><a href="#contact" aria-label="Talk about life insurance">Let's discuss your needs <span>↗</span></a></article>
-        <article class="service-card"><div class="service-num">02 / FUTURE</div><div class="service-icon"><svg viewBox="0 0 48 48" fill="none"><path d="M7 39h35M12 31l10-11 7 6L41 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 12h11v11" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Retirement income</h3><p>Consider strategies for your next phase of life and approach retirement with greater clarity and confidence.</p><a href="#contact" aria-label="Talk about retirement income">Plan your next chapter <span>↗</span></a></article>
-        <article class="service-card"><div class="service-num">03 / CARE</div><div class="service-icon"><svg viewBox="0 0 48 48" fill="none"><path d="M24 41S6 30 6 17a10 10 0 0 1 18-6 10 10 0 0 1 18 6c0 13-18 24-18 24Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M15 24h6l3-6 4 11 3-5h4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Long-term care</h3><p>Prepare for possible care needs and learn about options that can help support your lifestyle and loved ones.</p><a href="#contact" aria-label="Talk about long-term care">Explore your options <span>↗</span></a></article>
+<section class="highlights">
+  <div class="container highlight-grid">
+    <div class="highlight">
+      <span class="highlight-icon">◆</span>
+      <div>
+        <strong>Personalized Solutions</strong>
+        <small>Built around your needs</small>
       </div>
-    </div></section>
+    </div>
 
-    <section class="statement dark-section"><div class="container statement-inner"><div class="eyebrow light">A PLAN THAT FEELS RIGHT</div><h2>You deserve more than a policy. <em>You deserve a plan.</em></h2><a class="button button-primary" href="#contact">Let's build yours <span>↗</span></a><div class="statement-decoration" aria-hidden="true">✳</div></div></section>
+    <div class="highlight">
+      <span class="highlight-icon">✦</span>
+      <div>
+        <strong>Future-Focused Planning</strong>
+        <small>Preparing for life's changes</small>
+      </div>
+    </div>
 
-    <section class="process section-pad" id="approach"><div class="container"><div class="section-heading"><div><div class="eyebrow">SIMPLE BY DESIGN</div><h2>A clear path <span>forward.</span></h2></div><p>We keep the process personal, understandable, and centered on what's important to you.</p></div><div class="steps"><div class="step"><span class="step-number">01</span><div class="step-rule"></div><h3>Let's connect</h3><p>Tell us about your goals, questions, and what matters most to you.</p></div><div class="step"><span class="step-number">02</span><div class="step-rule"></div><h3>Explore options</h3><p>Review potential solutions and understand the choices available.</p></div><div class="step"><span class="step-number">03</span><div class="step-rule"></div><h3>Move with confidence</h3><p>Choose the next step that fits your needs and revisit it as life changes.</p></div></div></div></section>
+    <div class="highlight">
+      <span class="highlight-icon">◇</span>
+      <div>
+        <strong>Meaningful Conversations</strong>
+        <small>Understanding your goals</small>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <section class="insight section-pad"><div class="container insight-grid"><div class="insight-art"><span class="insight-caption">YOUR PRIORITIES COME FIRST</span><div class="insight-circle circle-a"></div><div class="insight-circle circle-b"></div><div class="insight-circle circle-c"></div><div class="insight-center">The right plan<br /><strong>starts with you.</strong><span>✦</span></div></div><div class="insight-content"><div class="eyebrow">WHY NOBLE FINANCE SOLUTIONS</div><h2>People first. <span>Always.</span></h2><p>Financial planning can feel complex. The experience shouldn't. We believe in thoughtful conversations, clear explanations, and helping you feel informed about the decisions ahead.</p><div class="check-row"><span>✓</span> Guidance focused on your priorities</div><div class="check-row"><span>✓</span> Straightforward conversations</div><div class="check-row"><span>✓</span> Solutions for life's changing seasons</div><a class="button button-dark" href="#contact">Have a conversation <span>↗</span></a></div></div></section>
+<!-- SERVICES -->
 
-    <section class="faq section-pad" id="faq"><div class="container faq-grid"><div><div class="eyebrow">GOOD QUESTIONS, CLEAR ANSWERS</div><h2>Curious? <span>Let's talk.</span></h2><p>Every financial journey starts somewhere. Here's what you might want to know before reaching out.</p></div><div class="accordion"><details><summary>What can Noble Finance Solutions help me with?<span class="plus">+</span></summary><p>We focus on conversations around life insurance, retirement income strategies, and long-term care planning. The right options depend on your circumstances and goals.</p></details><details><summary>Do I need a financial plan already?<span class="plus">+</span></summary><p>Not at all. You can start with questions. A first conversation can help you understand which topics deserve attention.</p></details><details><summary>Can I review my current coverage?<span class="plus">+</span></summary><p>Bring your current policies and questions to a conversation, and ask about reviewing whether your existing protection aligns with your priorities.</p></details><details><summary>How do I get started?<span class="plus">+</span></summary><p>Use the contact button below to visit Noble Finance Solutions' official website and request a conversation.</p></details></div></div></section>
+<section class="section services" id="services">
+  <div class="container">
+    <div class="center reveal">
+      <div class="eyebrow">WHAT WE OFFER</div>
+      <h2>Solutions Designed Around<br>Your Life & Your Future.</h2>
+      <p class="section-intro">
+        Every financial journey is different. Explore options
+        designed to help protect the people you love and
+        prepare for tomorrow.
+      </p>
+    </div>
 
-    <section class="contact-wrap" id="contact"><div class="container"><div class="contact-box"><div class="contact-glow"></div><div class="contact-copy"><div class="eyebrow light">THE NEXT STEP STARTS HERE</div><h2>Let's make your future <em>feel brighter.</em></h2><p>Ready to explore your options? Reach out through the official Noble Finance Solutions website to start the conversation.</p><div class="contact-actions"><a class="button button-primary" href="https://noblefinancesolutions.com/" target="_blank" rel="noopener noreferrer">Visit official site <span>↗</span></a><a class="text-link" href="#services">Review solutions <span>↗</span></a></div></div><div class="contact-decoration" aria-hidden="true"><div class="contact-star">✳</div></div></div></div></section>
-  </main>
-  <footer><div class="container footer-main"><div><a class="brand footer-brand" href="#top"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 42 42" fill="none"><path d="M8 30V11l13 16 13-16v19" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><path d="M8 35h26" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></span><span class="brand-text">NOBLE<span>FINANCE SOLUTIONS</span></span></a><p>Thoughtful guidance for what matters today, and what comes next.</p></div><div class="footer-links"><div><strong>Explore</strong><a href="#about">About us</a><a href="#services">Our solutions</a><a href="#approach">Our approach</a></div><div><strong>Connect</strong><a href="#faq">FAQs</a><a href="https://noblefinancesolutions.com/" target="_blank" rel="noopener noreferrer">Official website ↗</a><a href="#contact">Get started</a></div></div></div><div class="container footer-bottom"><span>© <span id="year">2026</span> Noble Finance Solutions. All rights reserved.</span><span>Information provided is general and is not individualized financial, tax, or legal advice. Coverage and product availability vary.</span></div></footer>
+    <div class="service-grid">
+
+      <article class="service-card reveal">
+        <div class="service-icon">♢</div>
+        <h3>Life Insurance</h3>
+        <p>
+          Help provide financial protection for the people
+          who matter most. Explore coverage options
+          that align with your circumstances and goals.
+        </p>
+        <a href="#contact">Explore Protection ↗</a>
+      </article>
+
+      <article class="service-card reveal">
+        <div class="service-icon">↗</div>
+        <h3>Retirement Income</h3>
+        <p>
+          Prepare for your next chapter with an approach
+          focused on retirement income needs,
+          long-term priorities and financial confidence.
+        </p>
+        <a href="#contact">Explore Retirement ↗</a>
+      </article>
+
+      <article class="service-card reveal">
+        <div class="service-icon">♡</div>
+        <h3>Long-Term Care</h3>
+        <p>
+          Plan for potential future care needs and learn
+          about solutions that can help support you
+          and your family through life's transitions.
+        </p>
+        <a href="#contact">Explore Care Options ↗</a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+
+<section class="section" id="about">
+  <div class="container about-grid">
+
+    <div class="about-visual reveal">
+      <div class="orbit"></div>
+      <div class="orbit two"></div>
+      <div class="orbit three"></div>
+      <div class="about-logo">N</div>
+    </div>
+
+    <div class="about-text reveal">
+      <div class="eyebrow">WHO WE ARE</div>
+      <h2>More Than Finance.<br>It's About <span style="color:#6654df">Your Future.</span></h2>
+
+      <p>
+        At Noble Finance Solutions, we understand that
+        financial planning isn't only about numbers.
+        It's about family, opportunity, independence,
+        and protecting what you've worked hard to build.
+      </p>
+
+      <p>
+        Our approach begins by listening to your goals
+        and helping you understand the solutions
+        available for your unique situation.
+      </p>
+
+      <div class="feature"><span>✓</span> A personalized approach</div>
+      <div class="feature"><span>✓</span> Clear, straightforward conversations</div>
+      <div class="feature"><span>✓</span> Solutions for life's important milestones</div>
+
+      <br>
+      <a href="#contact" class="btn btn-purple">
+        Let's Connect ↗
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROCESS -->
+
+<section class="section process" id="process">
+  <div class="container">
+
+    <div class="center reveal">
+      <div class="eyebrow">OUR APPROACH</div>
+      <h2>Financial Confidence<br>Starts With a Conversation.</h2>
+      <p class="section-intro">
+        We believe financial decisions should be understandable,
+        thoughtful and centered on your goals.
+      </p>
+    </div>
+
+    <div class="steps">
+
+      <div class="step reveal">
+        <div class="step-no">01.</div>
+        <h3>Discover</h3>
+        <p>
+          We begin by understanding your personal
+          circumstances, financial priorities and
+          what matters most to you.
+        </p>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-no">02.</div>
+        <h3>Design</h3>
+        <p>
+          Together, we explore relevant options
+          and explain how different solutions
+          may address your needs.
+        </p>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-no">03.</div>
+        <h3>Move Forward</h3>
+        <p>
+          Make decisions with greater clarity
+          and revisit your financial priorities
+          as life evolves.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- BRAND MESSAGE -->
+
+<section class="section message">
+  <div class="container message-panel reveal">
+    <div class="quote-mark">“</div>
+    <h2>
+      Your greatest investment isn't just your money.
+      It's the future you're creating for yourself
+      and the people you love.
+    </h2>
+    <p>THE NOBLE FINANCE SOLUTIONS PHILOSOPHY</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+
+<section class="section" id="faq">
+  <div class="container faq-grid">
+    <div class="reveal">
+      <div class="eyebrow">FREQUENTLY ASKED QUESTIONS</div>
+      <h2>Answers That Help You Move Forward.</h2>
+      <p style="color:#68758b">
+        Financial decisions can bring up important
+        questions. Here are a few places to start.
+      </p>
+    </div>
+
+    <div class="reveal">
+      <details>
+        <summary>What services does Noble Finance Solutions offer?</summary>
+        <p>
+          Our featured services include life insurance,
+          retirement income and long-term care solutions.
+        </p>
+      </details>
+
+      <details>
+        <summary>Can I discuss my existing insurance coverage?</summary>
+        <p>
+          Yes. You can request a conversation about your
+          current coverage and future protection needs.
+        </p>
+      </details>
+
+      <details>
+        <summary>When should I start retirement planning?</summary>
+        <p>
+          Planning can be useful at many stages of life.
+          The right approach depends on your individual
+          goals, resources and circumstances.
+        </p>
+      </details>
+
+      <details>
+        <summary>How can I get in touch?</summary>
+        <p>
+          Use the contact link below to visit the
+          official Noble Finance Solutions website.
+        </p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="contact-panel reveal">
+      <div class="eyebrow" style="color:#d8ad65">
+        YOUR NEXT CHAPTER BEGINS HERE
+      </div>
+
+      <h2>Let's Create a Financial Future Worth Looking Forward To.</h2>
+
+      <p>
+        Connect with Noble Finance Solutions
+        to explore the next steps in your financial journey.
+      </p>
+
+      <a href="https://noblefinancesolutions.com/"
+         target="_blank"
+         rel="noopener noreferrer"
+         class="btn btn-gold">
+         Contact Noble Finance Solutions ↗
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+
+<footer>
+  <div class="container">
+
+    <div class="footer-grid">
+
+      <div>
+        <a href="#home" class="logo">
+          <div class="logo-icon">N</div>
+          <div>NOBLE<small>FINANCE SOLUTIONS</small></div>
+        </a>
+
+        <p style="max-width:340px;margin-top:25px">
+          Supporting individuals and families
+          as they explore protection, retirement
+          and long-term care solutions.
+        </p>
+      </div>
+
+      <div>
+        <h4>Quick Links</h4>
+        <div class="footer-links">
+          <a href="#home">Home</a>
+          <a href="#about">About Us</a>
+          <a href="#services">Our Services</a>
+          <a href="#process">Our Process</a>
+        </div>
+      </div>
+
+      <div>
+        <h4>Get in Touch</h4>
+        <div class="footer-links">
+          <a href="#contact">Contact</a>
+          <a href="https://noblefinancesolutions.com/"
+             target="_blank"
+             rel="noopener noreferrer">
+             Official Website ↗
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright">
+      <p>© <span id="year"></span> Noble Finance Solutions. All rights reserved.</p>
+      <p>
+        This website provides general information
+        and does not constitute individualized
+        financial, investment, legal or tax advice.
+        Insurance products, eligibility and availability vary.
+      </p>
+    </div>
+
+  </div>
+</footer>
+
+<script>
+// Mobile navigation
+const menuBtn = document.getElementById("menuBtn");
+const navLinks = document.getElementById("navLinks");
+
+menuBtn.addEventListener("click", () => {
+  const isOpen = navLinks.classList.toggle("open");
+  menuBtn.textContent = isOpen ? "✕" : "☰";
+  menuBtn.setAttribute("aria-expanded", String(isOpen));
+});
+
+document.querySelectorAll(".nav-links a").forEach(link => {
+  link.addEventListener("click", () => {
+    navLinks.classList.remove("open");
+    menuBtn.textContent = "☰";
+    menuBtn.setAttribute("aria-expanded", "false");
+  });
+});
+
+// Dynamic copyright year
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+// Scroll reveal animation
+if ("IntersectionObserver" in window) {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("active");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold:0.08 });
+
+  document.querySelectorAll(".reveal").forEach(element => {
+    observer.observe(element);
+  });
+} else {
+  document.querySelectorAll(".reveal").forEach(element => {
+    element.classList.add("active");
+  });
+}
+</script>
+
 </body>
 </html>
