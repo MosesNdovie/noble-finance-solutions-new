@@ -15,7 +15,8 @@ If you work on `development`, merge the changes into `main` before using `main` 
 ## Before going live
 
 - Confirm the official business name and obtain approval for the copy and branding.
-- The contact button currently links to `https://noblefinancesolutions.com/` because no verified direct phone/email was available.
+- Contact details (phone (539) 237-7273, contact@noblefinancesolutions.com) come from the Noble Finance Solutions flyers. Booking buttons open a pre-filled email.
+- Key-fact statistics in the 5 Risks section come from the flyer copy; confirm sources and update them each year.
 - Update all claims, license disclosures, privacy information, and legal wording as required by the business and its regulators.
 - Confirm that images, logos and brand assets you add are owned or licensed.
 - To use the domain `noblefinancesolutions.com` with GitHub Pages, configure the custom domain in GitHub Pages **and** set DNS records with the domain registrar. Don't change DNS until you have authorization.
@@ -25,3 +26,10 @@ If you work on `development`, merge the changes into `main` before using `main` 
 - `index.html`: site sections and content
 - `styles.css`: visual design and responsive layout
 - `script.js`: mobile navigation and copyright year
+- `images/`: risk photos, advisor portrait and the Health Check QR code
+
+## Interactive features (all inside `index.html`)
+
+- **5 Financial Risks explorer**: tabbed, auto-advancing panel with animated key-fact stats. Edit the `RISKS` array in the script.
+- **Financial Protection Health Check**: 10-question quiz scored out of 100, with a per-risk breakdown. Runs entirely in the browser; the result pre-fills the booking email. Edit `QUESTIONS`, `ANSWERS` and `TIERS` in the script.
+- **QR code** links to the existing checkup at https://hqr.la/1f159ada (taken from the flyer).
