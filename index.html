@@ -1423,6 +1423,16 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
 .service-card .service-icon {position:relative;z-index:1;margin-top:-31px;background:white!important;box-shadow:0 12px 28px #0e224626;border:1px solid var(--border)}
 .service-card h3 {margin-top:20px}
 @media(max-width:950px){.service-grid.five .service-card:nth-child(n+4) .service-media {aspect-ratio:16/9}}
+
+/* Real sunrise photo in hero */
+.scene {background:#0e2246}
+.scene-art {width:100%;height:100%;object-fit:cover;object-position:40% 50%;animation:kenburns 22s ease-in-out infinite alternate;transform-origin:30% 40%}
+@keyframes kenburns {from{transform:scale(1)}to{transform:scale(1.12)}}
+.scene-shade {position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,#0e224640 0%,transparent 30%,transparent 55%,#0e2246cc 100%),
+  radial-gradient(circle at 33% 31%,#fff3d455 0%,transparent 28%);
+  animation:glow 5s ease-in-out infinite alternate}
+@keyframes glow {from{opacity:.85}to{opacity:1}}
 </style>
 </head>
 
@@ -1496,33 +1506,8 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
 
     <div class="scene-wrap reveal">
       <div class="scene">
-        <svg class="scene-art" viewBox="0 0 520 600" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of the sun rising over mountains">
-          <defs>
-            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#1d3a6e"/><stop offset=".22" stop-color="#4a6aa5"/>
-              <stop offset=".42" stop-color="#d9a7a0"/><stop offset=".55" stop-color="#f0c27f"/><stop offset=".7" stop-color="#f8e2b3"/>
-            </linearGradient>
-            <radialGradient id="sunGlow" cx=".5" cy=".5" r=".5">
-              <stop offset="0" stop-color="#fff4d6"/><stop offset=".35" stop-color="#f6d595" stop-opacity=".8"/><stop offset="1" stop-color="#f6d595" stop-opacity="0"/>
-            </radialGradient>
-            <linearGradient id="m1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7d8fb8"/><stop offset="1" stop-color="#5b6f9c"/></linearGradient>
-            <linearGradient id="m2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3d5287"/><stop offset="1" stop-color="#2a3f72"/></linearGradient>
-            <linearGradient id="m3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b315f"/><stop offset="1" stop-color="#0e2246"/></linearGradient>
-          </defs>
-          <rect width="520" height="600" fill="url(#sky)"/>
-          <g class="sun"><circle cx="220" cy="290" r="190" fill="url(#sunGlow)"/><circle cx="220" cy="290" r="50" fill="#fff6dc"/></g>
-          <g class="rays" stroke="#fff1cf" stroke-opacity=".28" stroke-width="2">
-            <path d="M220 290 L220 40M220 290 L380 90M220 290 L60 90M220 290 L470 200M220 290 L-30 200M220 290 L310 50M220 290 L130 50"/>
-          </g>
-          <path d="M0 400 L70 330 L120 360 L190 280 L250 340 L320 270 L390 330 L450 290 L520 340 V600 H0Z" fill="url(#m1)"/>
-          <path d="M0 450 L60 410 L130 440 L210 360 L280 420 L340 390 L420 440 L520 380 V600 H0Z" fill="url(#m2)"/>
-          <path d="M0 510 Q130 460 260 500 T520 480 V600 H0Z" fill="url(#m3)"/>
-          <g fill="#0b1c3c">
-            <path d="M40 520 l14-46 14 46z M30 530 l20-60 20 60z"/>
-            <path d="M440 505 l16-52 16 52z M465 515 l12-38 12 38z"/>
-            <path d="M95 540 l10-30 10 30z"/>
-          </g>
-        </svg>
+        <img class="scene-art" src="https://images.unsplash.com/photo-1547603857-f9b4e0ef3317?auto=format&fit=crop&q=80&w=900" srcset="https://images.unsplash.com/photo-1547603857-f9b4e0ef3317?auto=format&fit=crop&q=80&w=600 600w, https://images.unsplash.com/photo-1547603857-f9b4e0ef3317?auto=format&fit=crop&q=80&w=900 900w, https://images.unsplash.com/photo-1547603857-f9b4e0ef3317?auto=format&fit=crop&q=80&w=1300 1300w" sizes="(max-width: 550px) 90vw, 460px" alt="The sun rising over a mountain ridge" fetchpriority="high">
+        <div class="scene-shade"></div>
         <div class="scene-caption">
           <span>A Brighter Tomorrow</span>
           <strong>Starts With Today.</strong>
