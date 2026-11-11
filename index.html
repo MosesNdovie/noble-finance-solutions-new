@@ -1504,6 +1504,43 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
 .info-risks a:hover {background:var(--navy);color:#fff}
 @media(max-width:950px){.scene-wrap{align-items:center}.scene{margin:0 auto}}
 @media(max-width:550px){.scene-info{grid-template-columns:1fr}.info-risks a{font-size:12px}}
+
+/* Advisor section layout fix + bio dialog */
+.about-grid {align-items:start !important}
+.advisor-open {position:sticky;top:120px;width:100%;border:0;padding:0;font:inherit;color:inherit;text-align:inherit;cursor:pointer;min-height:500px}
+.advisor-open .advisor-photo {transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.advisor-open:hover .advisor-photo {transform:scale(1.04)}
+.advisor-open:focus-visible {outline:3px solid var(--gold);outline-offset:4px}
+.bio-hint {position:absolute;right:24px;bottom:24px;z-index:2;display:inline-flex;gap:6px;align-items:center;background:var(--gold);color:var(--navy);font:700 13px Outfit,sans-serif;padding:10px 16px;border-radius:30px;box-shadow:0 10px 24px #0005;transition:.3s}
+.advisor-open:hover .bio-hint {transform:translateY(-3px)}
+.read-bio {background:none;border:0;padding:0;margin:-6px 0 18px;font:700 15px Outfit,sans-serif;color:var(--purple);cursor:pointer;border-bottom:2px solid var(--gold)}
+.read-bio:hover {color:var(--navy)}
+.bio-dialog {border:0;padding:0;border-radius:24px;max-width:980px;width:calc(100% - 32px);max-height:calc(100vh - 48px);box-shadow:0 40px 100px #050b1f99;color:var(--text)}
+.bio-dialog::backdrop {background:#0b1730c7;backdrop-filter:blur(4px)}
+.bio-dialog[open] {animation:bioIn .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes bioIn {from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+.bio-shell {display:grid;grid-template-columns:300px 1fr;position:relative}
+.bio-close {position:absolute;right:14px;top:12px;z-index:2;width:40px;height:40px;border-radius:50%;border:0;background:#eef1f6;color:var(--navy);font-size:26px;line-height:1;cursor:pointer}
+.bio-close:hover {background:var(--navy);color:#fff}
+.bio-side {background:linear-gradient(160deg,#16305e,#2b5596);color:#fff;padding:36px 28px;text-align:center}
+.bio-side > img {width:180px;height:180px;border-radius:50%;display:block;margin:0 auto 16px;box-shadow:0 18px 40px #0006}
+.bio-side h2 {margin:0;font-size:26px;color:#fff}
+.bio-role {margin:4px 0 0;color:#f1d29a;font-weight:600;font-size:14px}
+.bio-firm {margin:10px 0 18px;color:#c9d3e6;font-size:13.5px;line-height:1.5}
+.bio-creds {list-style:none;margin:0 0 20px;padding:0;display:grid;gap:8px;text-align:left}
+.bio-creds li {background:#ffffff14;border:1px solid #ffffff26;border-radius:12px;padding:9px 12px 9px 34px;font-size:13px;position:relative}
+.bio-creds li:before {content:"✓";position:absolute;left:12px;color:#f1d29a;font-weight:800}
+.bio-bbb {display:inline-block;background:#fff;border-radius:10px;padding:6px;line-height:0}
+.bio-bbb img {height:46px;width:auto}
+.bio-main {padding:40px 40px 34px;overflow:auto}
+.bio-main h3 {font-family:var(--serif);font-size:30px;line-height:1.15;color:var(--navy);margin:6px 50px 14px 0}
+.bio-main h4 {font-size:17px;color:var(--navy);margin:22px 0 6px}
+.bio-main p {color:var(--muted);line-height:1.75;margin:0 0 12px;font-size:15.5px}
+.bio-help {list-style:none;padding:0;margin:8px 0 22px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bio-help li {background:#eaf1fb;color:var(--navy);font-weight:600;font-size:14px;border-radius:12px;padding:10px 12px}
+.bio-actions {display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.bio-actions .btn {padding:13px 18px;font-size:14px}
+@media(max-width:800px){.bio-shell{grid-template-columns:1fr}.bio-side{padding:30px 22px}.bio-main{padding:28px 22px}.bio-main h3{font-size:24px;margin-right:0}.advisor-open{position:relative;top:0;min-height:430px}.bio-hint{top:16px;left:16px;right:auto;bottom:auto;padding:8px 13px;font-size:12px}.bio-help{grid-template-columns:1fr}}
 </style>
 </head>
 
@@ -1831,7 +1868,7 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
 <section class="section" id="about">
   <div class="container about-grid">
 
-    <div class="about-visual advisor-visual reveal">
+    <button type="button" class="about-visual advisor-visual advisor-open reveal" data-open-bio aria-haspopup="dialog" aria-controls="bioDialog">
       <div class="orbit"></div>
       <div class="orbit two"></div>
       <div class="orbit three"></div>
@@ -1843,7 +1880,8 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
         <strong>Maunty Wright</strong>
         <small>Life Insurance &amp; Finance Professional</small>
       </div>
-    </div>
+      <span class="bio-hint">View full bio <span aria-hidden="true">→</span></span>
+    </button>
 
     <div class="about-text reveal">
       <div class="eyebrow">MEET YOUR ADVISOR</div>
@@ -1852,16 +1890,12 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
       <div class="service-area">📍 Tulsa County &amp; surrounding areas</div>
 
       <p>
-        Maunty Wright grew up in Tulsa, where his mother taught him the value of
-        steady work, saving and budgeting. After more than 15 years in television
-        and film in Southern California, he moved into financial services. When a
-        loss in the family brought him home, he founded Noble Finance Solutions to
-        serve Tulsa-area families, retirees and business owners.
+        Tulsa-raised and education-first, Maunty Wright founded Noble Finance
+        Solutions to help local families, retirees and business owners protect what
+        they&rsquo;ve built, with clear information and a realistic plan, never
+        products you don&rsquo;t need.
       </p>
-      <p>
-        His approach is simple: educate first, skip the jargon, and build a clear,
-        realistic plan, never products you don&rsquo;t need.
-      </p>
+      <button type="button" class="read-bio" data-open-bio aria-haspopup="dialog" aria-controls="bioDialog">Read Maunty&rsquo;s full story <span aria-hidden="true">→</span></button>
 
       <div class="cred-row">
         <span>Licensed Independent Financial Professional</span>
@@ -1870,7 +1904,6 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
         <span>NPN #22312170</span>
       </div>
 
-      <blockquote class="advisor-quote">&ldquo;Your legacy starts with protection. Let&rsquo;s build it together.&rdquo;<cite>Maunty Wright</cite></blockquote>
 
       <div class="pillars">
         <div class="pillar"><span>1</span><div><strong>Flexible, customized coverage plans</strong><small>Secure your income, protect what matters, plan for what's next.</small></div></div>
@@ -1895,6 +1928,47 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
 
   </div>
 </section>
+
+<dialog class="bio-dialog" id="bioDialog" aria-labelledby="bioTitle">
+  <div class="bio-shell">
+    <button type="button" class="bio-close" data-close-bio aria-label="Close bio">&times;</button>
+    <aside class="bio-side">
+      <img src="images/maunty-wright.webp" alt="Portrait of Maunty Wright" width="220" height="220">
+      <h2 id="bioTitle">Maunty Wright</h2>
+      <p class="bio-role">Life Insurance &amp; Finance Professional</p>
+      <p class="bio-firm">Founder, Noble Finance Solutions<br>Tulsa, Oklahoma</p>
+      <ul class="bio-creds">
+        <li>Licensed Independent Financial Professional</li>
+        <li>8+ years of experience</li>
+        <li>SafeMoney Certified&trade;</li>
+        <li>NPN #22312170</li>
+      </ul>
+      <a class="bio-bbb" href="https://www.bbb.org/us/ok/tulsa/profile/insurance-agency/noble-finance-solutions-1025-38111690/#sealclick" target="_blank" rel="noopener noreferrer"><img src="images/bbb-accredited-horizontal.png" alt="BBB Accredited Business" width="448" height="160"></a>
+    </aside>
+    <div class="bio-main">
+      <div class="eyebrow">MEET YOUR ADVISOR</div>
+      <h3>From Tulsa roots to protecting Tulsa families.</h3>
+      <p>Maunty grew up in Tulsa, Oklahoma, where his mother taught him the lessons that still guide his work: show up steadily, save what you can, and keep a budget you can live with.</p>
+      <p>He went on to spend more than 15 years working in television and film in Southern California. As that industry changed, through the disruption of COVID-19 and the rise of AI, he turned toward a career where he could make a lasting difference in people&rsquo;s lives: financial services.</p>
+      <p>When a death in the family brought him back home, Maunty founded Noble Finance Solutions to serve the families, retirees and business owners of Tulsa County and the surrounding areas.</p>
+      <h4>How he works</h4>
+      <p>Maunty believes good decisions start with understanding. He takes time to explain options in plain language, skips the jargon, and builds a clear, realistic plan around each client&rsquo;s goals, never pushing products they don&rsquo;t need.</p>
+      <h4>How he can help</h4>
+      <ul class="bio-help">
+        <li>Life insurance</li>
+        <li>Retirement income planning</li>
+        <li>Annuities (fixed &amp; indexed)</li>
+        <li>Long-term care planning</li>
+      </ul>
+      <blockquote class="advisor-quote">&ldquo;Your legacy starts with protection. Let&rsquo;s build it together.&rdquo;<cite>Maunty Wright</cite></blockquote>
+      <div class="bio-actions">
+        <a class="btn btn-purple" href="tel:+15392377273">Call (539) 237-7273</a>
+        <a class="btn btn-ghost" href="mailto:contact@noblefinancesolutions.com?subject=Financial%20Protection%20%26%20Retirement%20Review">Email Maunty</a>
+        <a class="btn btn-ghost" href="https://s.blinq.me/A1pbR0qX7BKX" target="_blank" rel="noopener noreferrer">Save contact ↗</a>
+      </div>
+    </div>
+  </div>
+</dialog>
 
 <!-- PROCESS -->
 
@@ -2488,6 +2562,18 @@ quizStart();
 // Header shadow on scroll
 const hdr = document.querySelector("header");
 addEventListener("scroll", () => hdr.classList.toggle("scrolled", scrollY > 10), { passive: true });
+
+// Advisor full-bio dialog
+const bioDialog = document.getElementById("bioDialog");
+let bioOpener = null;
+document.querySelectorAll("[data-open-bio]").forEach(b => b.addEventListener("click", () => {
+  bioOpener = b;
+  if (bioDialog.showModal) bioDialog.showModal(); else bioDialog.setAttribute("open", "");
+  bioDialog.querySelector(".bio-main").scrollTop = 0;
+}));
+bioDialog.querySelector("[data-close-bio]").addEventListener("click", () => bioDialog.close());
+bioDialog.addEventListener("click", e => { if (e.target === bioDialog) bioDialog.close(); });
+bioDialog.addEventListener("close", () => bioOpener && bioOpener.focus());
 </script>
 
 </body>
