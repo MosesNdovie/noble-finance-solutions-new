@@ -1435,6 +1435,13 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
 .scene-shade {position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(180deg,transparent 0%,transparent 58%,#0e2246b3 100%)}
 @keyframes glow {from{opacity:.85}to{opacity:1}}
+
+/* Whole service card is clickable (stretched link) */
+.service-card {position:relative;cursor:pointer}
+.service-card a[data-risk]:after {content:"";position:absolute;inset:0;z-index:2;border-radius:inherit}
+.service-card a[data-risk]:focus-visible {outline:none}
+.service-card:has(a[data-risk]:focus-visible) {outline:3px solid var(--gold);outline-offset:3px}
+.service-card:hover a[data-risk] {color:var(--purple)}
 </style>
 </head>
 
@@ -1599,7 +1606,7 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
           if something happens to you.
         </p>
         <span class="stat-chip">40% of U.S. adults say they need more</span><br>
-        <a href="#risks" data-risk="0">See the risk ↗</a>
+        <a href="#risks" data-risk="0" aria-label="Life Insurance: see the risk">See the risk ↗</a>
       </article>
 
       <article class="service-card reveal">
@@ -1612,7 +1619,7 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
           market downturns and inflation.
         </p>
         <span class="stat-chip">Only 57% think savings will last</span><br>
-        <a href="#risks" data-risk="1">See the risk ↗</a>
+        <a href="#risks" data-risk="1" aria-label="Retirement Income: see the risk">See the risk ↗</a>
       </article>
 
       <article class="service-card reveal">
@@ -1625,7 +1632,7 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
           have more options.
         </p>
         <span class="stat-chip">~70% chance of needing care after 65</span><br>
-        <a href="#risks" data-risk="2">See the risk ↗</a>
+        <a href="#risks" data-risk="2" aria-label="Long-Term Care: see the risk">See the risk ↗</a>
       </article>
 
       <article class="service-card reveal">
@@ -1637,7 +1644,7 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
           your mortgage and other obligations from becoming a family burden.
         </p>
         <span class="stat-chip">U.S. household debt: $18.8 trillion</span><br>
-        <a href="#risks" data-risk="3">See the risk ↗</a>
+        <a href="#risks" data-risk="3" aria-label="Debt Protection: see the risk">See the risk ↗</a>
       </article>
 
       <article class="service-card reveal">
@@ -1649,7 +1656,7 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
           on your loved ones during an already difficult time.
         </p>
         <span class="stat-chip">Funerals can exceed $8,000</span><br>
-        <a href="#risks" data-risk="4">See the risk ↗</a>
+        <a href="#risks" data-risk="4" aria-label="Final Expense: see the risk">See the risk ↗</a>
       </article>
 
     </div>
