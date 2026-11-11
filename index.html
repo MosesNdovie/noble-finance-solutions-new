@@ -1442,6 +1442,31 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
 .service-card a[data-risk]:focus-visible {outline:none}
 .service-card:has(a[data-risk]:focus-visible) {outline:3px solid var(--gold);outline-offset:3px}
 .service-card:hover a[data-risk] {color:var(--purple)}
+
+/* Trust badges & photos */
+.brand-logo {height:58px}
+footer .brand-logo {height:70px}
+.trust-row {display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin:0 0 26px}
+.bbb-link {display:block;border-radius:10px;transition:.3s;line-height:0}
+.bbb-link img {height:58px;width:auto;display:block}
+.bbb-link:hover {transform:translateY(-2px);box-shadow:0 10px 24px #0e224622}
+.contact-card {display:flex;align-items:center;gap:12px;padding:8px 16px 8px 8px;border:1px solid var(--border);border-radius:14px;background:white}
+.contact-card img {width:64px;height:64px;display:block}
+.contact-card strong {display:block;font:700 14px Outfit,sans-serif;color:var(--navy)}
+.contact-card small {font-size:12.5px;color:var(--muted)}
+.contact-card a {color:var(--purple);font-weight:700}
+.footer-bbb {display:inline-block;margin-top:22px;background:white;border-radius:12px;padding:8px;line-height:0;transition:.3s}
+.footer-bbb img {height:96px;width:auto}
+.footer-bbb:hover {transform:translateY(-3px)}
+.advisor-photo {border:none;background:transparent;box-shadow:0 30px 70px #0006;border-radius:50%}
+.process-photos {display:grid;grid-template-columns:1fr 2fr;gap:18px;margin:0 0 50px;position:relative;z-index:1}
+.process-photos figure {margin:0;position:relative;border-radius:20px;overflow:hidden;height:340px;border:1px solid #ffffff22}
+.process-photos img {width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.process-photos figure:hover img {transform:scale(1.05)}
+.process-photos figcaption {position:absolute;left:16px;bottom:16px;background:#0e2246cc;color:#fff;font:600 12px Outfit,sans-serif;letter-spacing:1.5px;text-transform:uppercase;padding:8px 12px;border-radius:30px;backdrop-filter:blur(6px)}
+.process-photos figure:first-child img {object-position:50% 25%}
+@media(max-width:800px){.process-photos{grid-template-columns:1fr}.process-photos figure{height:260px}.process-photos figure:first-child img{object-position:50% 52%}}
+@media(max-width:550px){.brand-logo{height:46px}}
 </style>
 </head>
 
@@ -1458,7 +1483,7 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
 <header>
   <nav class="nav container">
     <a href="#home" class="logo" aria-label="Noble Finance Solutions home">
-      <img class="brand-logo" src="images/noble-logo-light.png" alt="Noble Finance Solutions" width="830" height="390">
+      <img class="brand-logo" src="images/noble-logo-official-light.png" alt="Noble Finance Solutions" width="1207" height="559">
     </a>
 
     <div class="nav-links" id="navLinks">
@@ -1597,7 +1622,7 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
     <div class="service-grid five">
 
       <article class="service-card reveal">
-        <div class="service-media"><img src="images/risk-life.jpg" alt="A smiling family of four hugging at home" loading="lazy" decoding="async"></div>
+        <div class="service-media"><img src="images/photo-family.webp" alt="Three generations of a smiling family together outdoors" loading="lazy" decoding="async"></div>
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
         <h3>Life Insurance</h3>
         <p>
@@ -1610,7 +1635,7 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
       </article>
 
       <article class="service-card reveal">
-        <div class="service-media"><img src="https://noblefinancesolutions.com/wp-content/uploads/2026/08/%E2%80%94Pngtree%E2%80%94investment-concept-with-model-house_16152526-scaled.jpg" alt="A small model house on stacks of coins with a seedling growing" loading="lazy" decoding="async"></div>
+        <div class="service-media"><img src="images/photo-retirement-couple.webp" alt="A happy retired couple walking arm in arm" loading="lazy" decoding="async"></div>
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg></div>
         <h3>Retirement Income</h3>
         <p>
@@ -1623,7 +1648,7 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
       </article>
 
       <article class="service-card reveal">
-        <div class="service-media"><img src="https://noblefinancesolutions.com/wp-content/uploads/2026/09/LTC3.jpeg" alt="A younger person gently holding an older person's hands" loading="lazy" decoding="async"></div>
+        <div class="service-media"><img src="images/photo-caregiver.webp" alt="A caregiver sharing a warm moment with an older woman in a wheelchair" loading="lazy" decoding="async"></div>
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z"/></svg></div>
         <h3>Long-Term Care</h3>
         <p>
@@ -1636,7 +1661,7 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
       </article>
 
       <article class="service-card reveal">
-        <div class="service-media"><img src="images/risk-debt.jpg" alt="A family home lit up at sunset" loading="lazy" decoding="async"></div>
+        <div class="service-media"><img src="images/photo-home-keys.webp" alt="A model house with house keys and a notebook on a desk" loading="lazy" decoding="async"></div>
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></div>
         <h3>Debt Protection</h3>
         <p>
@@ -1732,7 +1757,7 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
       <aside class="checkup-side reveal">
         <div class="side-card">
           <div class="qr-box">
-            <img src="images/checkup-qr.svg" alt="QR code for the Financial Protection Health Check" width="112" height="112">
+            <img src="images/checkup-qr-noble.png" alt="QR code for the Financial Protection Health Check" width="112" height="112">
             <div>
               <h3>On your phone?</h3>
               <p>Scan to take the checkup on the go, or share it with your spouse.</p>
@@ -1776,7 +1801,6 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
       <img class="advisor-photo" src="images/maunty-wright.webp" alt="Portrait of Maunty Wright, Life Insurance and Finance Professional" width="320" height="320" loading="lazy">
       <div class="badge-row">
         <span><b>✓</b> Safe Money Certified</span>
-        <span><b>✓</b> BBB Accredited Business</span>
       </div>
       <div class="name-card">
         <strong>Maunty Wright</strong>
@@ -1804,6 +1828,16 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
         <div class="pillar"><span>3</span><div><strong>Preserve dignity and independence</strong><small>Thoughtful coverage built around dignity, choice and long-term security.</small></div></div>
       </div>
 
+      <div class="trust-row">
+        <a class="bbb-link" href="https://www.bbb.org/us/ok/tulsa/profile/insurance-agency/noble-finance-solutions-1025-38111690/#sealclick" target="_blank" rel="noopener noreferrer" aria-label="Noble Finance Solutions is a BBB Accredited Business: view the BBB profile">
+          <img src="images/bbb-accredited-horizontal.png" alt="BBB Accredited Business" width="448" height="160">
+        </a>
+        <div class="contact-card">
+          <img src="images/maunty-contact-qr.png" alt="QR code to save Maunty Wright's digital business card" width="84" height="84">
+          <div><strong>Save Maunty&rsquo;s contact</strong><small>Scan, or <a href="https://s.blinq.me/A1pbR0qX7BKX" target="_blank" rel="noopener noreferrer">open his digital card ↗</a></small></div>
+        </div>
+      </div>
+
       <a href="#contact" class="btn btn-purple">
         Book Your Review With Maunty ↗
       </a>
@@ -1824,6 +1858,11 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
         We believe financial decisions should be understandable,
         thoughtful and centered on your goals.
       </p>
+    </div>
+
+    <div class="process-photos reveal">
+      <figure><img src="images/photo-team-meeting.webp" alt="An advisor walking clients through a plan on a tablet" loading="lazy" decoding="async"><figcaption>Real conversations</figcaption></figure>
+      <figure><img src="images/photo-planning-desk.webp" alt="A planning desk with financial charts, a notebook, a laptop and coffee" loading="lazy" decoding="async"><figcaption>A clear, written plan</figcaption></figure>
     </div>
 
     <div class="steps">
@@ -1992,7 +2031,7 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
 
       <div>
         <a href="#home" class="logo">
-          <img class="brand-logo" src="images/noble-logo-light.png" alt="Noble Finance Solutions" width="830" height="390">
+          <img class="brand-logo" src="images/noble-logo-official-light.png" alt="Noble Finance Solutions" width="1207" height="559">
         </a>
 
         <p style="max-width:340px;margin-top:25px">
@@ -2001,6 +2040,9 @@ footer {background:linear-gradient(180deg,#0b1c3c,#081530);border-top:3px solid 
           and surrounding areas.<br><br>
           <em style="color:#d8ad65;font-family:Georgia,serif;font-size:17px">People. Plans. Possibilities.</em>
         </p>
+        <a class="footer-bbb" href="https://www.bbb.org/us/ok/tulsa/profile/insurance-agency/noble-finance-solutions-1025-38111690/#sealclick" target="_blank" rel="noopener noreferrer" aria-label="BBB Accredited Business: view the BBB profile">
+          <img src="images/bbb-accredited-vertical.png" alt="BBB Accredited Business" width="175" height="260" loading="lazy">
+        </a>
       </div>
 
       <div>
@@ -2078,7 +2120,7 @@ if ("IntersectionObserver" in window) {
 const RISKS = [
   {
     short: "Life Insurance",
-    img: "images/risk-life.jpg",
+    img: "images/photo-family.webp",
     stat: 40, prefix: "", suffix: "%", ring: 40,
     statLabel: "of U.S. adults say they need more life insurance",
     fact: "40% of U.S. adults say they need more life insurance.",
@@ -2087,7 +2129,7 @@ const RISKS = [
   },
   {
     short: "Retirement Income",
-    img: "images/risk-retirement.jpg",
+    img: "images/photo-retirement-couple.webp",
     stat: 57, prefix: "", suffix: "%", ring: 57,
     statLabel: "of workers believe their savings will last throughout retirement",
     fact: "Only 57% of workers believe their savings will last throughout retirement.",
@@ -2096,7 +2138,7 @@ const RISKS = [
   },
   {
     short: "Long-Term Care",
-    img: "images/risk-care.jpg",
+    img: "images/photo-caregiver.webp",
     stat: 70, prefix: "~", suffix: "%", ring: 70,
     statLabel: "chance someone turning 65 will need some form of long-term care",
     fact: "Someone turning 65 has nearly a 70% chance of needing some form of long-term care.",
@@ -2105,7 +2147,7 @@ const RISKS = [
   },
   {
     short: "Debt Protection",
-    img: "images/risk-debt.jpg",
+    img: "images/photo-home-keys.webp",
     stat: 18.8, prefix: "$", suffix: "T", ring: 100, decimals: 1,
     statLabel: "total U.S. household debt reached in 2026",
     fact: "U.S. household debt reached $18.8 trillion in 2026.",

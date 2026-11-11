@@ -26,7 +26,7 @@ If you work on `development`, merge the changes into `main` before using `main` 
 - `index.html`: site sections and content
 - `styles.css`: visual design and responsive layout
 - `script.js`: mobile navigation and copyright year
-- `images/`: Noble logo (light and dark versions), favicon, risk photos, advisor portrait and the Health Check QR code
+- `images/`: official Noble logo (light and dark versions), favicon, service photos, advisor portrait, BBB Accredited badges, the Health Check QR code and Maunty's contact-card QR
 
 ## Interactive features (all inside `index.html`)
 
