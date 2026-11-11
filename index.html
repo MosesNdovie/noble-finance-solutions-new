@@ -1467,6 +1467,21 @@ footer .brand-logo {height:70px}
 .process-photos figure:first-child img {object-position:50% 25%}
 @media(max-width:800px){.process-photos{grid-template-columns:1fr}.process-photos figure{height:260px}.process-photos figure:first-child img{object-position:50% 52%}}
 @media(max-width:550px){.brand-logo{height:46px}}
+
+/* Green pastures hero + bio */
+.scene-art {object-position:50% 62% !important;transform:none !important;filter:saturate(1.18) contrast(1.06) brightness(1.22) !important;animation:kenburns2 26s ease-in-out infinite alternate !important;transform-origin:50% 70%}
+@keyframes kenburns2 {from{transform:scale(1)}to{transform:scale(1.08)}}
+.scene-shade {background:linear-gradient(180deg,transparent 0%,transparent 48%,#0e2246b8 78%,#0e2246d9 100%) !important}
+.scene-caption {bottom:78px !important;left:26px !important;right:26px !important;text-align:center}
+.scene-title {margin:0;font:italic 600 27px/1.18 var(--serif);color:#f7dfae;letter-spacing:-.01em;text-shadow:0 2px 14px #0e2246aa}
+.scene-sub {margin:10px auto 0;max-width:340px;font:500 13.5px/1.5 Outfit,sans-serif;color:#e6ecf6}
+.risks-card {top:22% !important}
+.cred-row {display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 18px}
+.cred-row span {font-size:12.5px;font-weight:700;color:var(--navy);background:#eaf1fb;border-radius:20px;padding:7px 12px}
+.advisor-quote {margin:0 0 22px;padding:14px 18px;border-left:3px solid var(--gold);background:#fbf7ef;border-radius:0 12px 12px 0;font:italic 600 17px/1.45 var(--serif);color:var(--navy)}
+.advisor-quote cite {display:block;margin-top:6px;font:600 12px Outfit,sans-serif;font-style:normal;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.checkup {background:linear-gradient(180deg,#0b2d63eb 0%,#0e2246f2 60%,#0e2246fa 100%),url(images/photo-checkup-stethoscope.webp) center/cover no-repeat !important}
+@media(max-width:550px){.scene-title{font-size:22px}.scene-sub{font-size:12.5px}.scene-caption{bottom:74px !important}}
 </style>
 </head>
 
@@ -1540,11 +1555,11 @@ footer .brand-logo {height:70px}
 
     <div class="scene-wrap reveal">
       <div class="scene">
-        <img class="scene-art" src="https://images.unsplash.com/photo-1547603857-f9b4e0ef3317?auto=format&fit=crop&q=80&w=900" srcset="https://images.unsplash.com/photo-1547603857-f9b4e0ef3317?auto=format&fit=crop&q=80&w=600 600w, https://images.unsplash.com/photo-1547603857-f9b4e0ef3317?auto=format&fit=crop&q=80&w=900 900w, https://images.unsplash.com/photo-1547603857-f9b4e0ef3317?auto=format&fit=crop&q=80&w=1300 1300w" sizes="(max-width: 550px) 120vw, 620px" alt="The sun rising over a mountain ridge" fetchpriority="high">
+        <img class="scene-art" src="images/photo-green-pastures.webp" alt="A quiet road winding through green pastures toward the mountains" width="1300" height="1300" fetchpriority="high">
         <div class="scene-shade"></div>
         <div class="scene-caption">
-          <span>A Brighter Tomorrow</span>
-          <strong>Starts With Today.</strong>
+          <h2 class="scene-title">Peace of Mind on the Road to Greener Pastures.</h2>
+          <p class="scene-sub">Robust insurance strategies that safeguard your wealth, your workforce, and your legacy.</p>
         </div>
       </div>
 
@@ -1611,7 +1626,7 @@ footer .brand-logo {height:70px}
   <div class="container">
     <div class="center reveal">
       <div class="eyebrow">WHAT WE OFFER</div>
-      <h2>Solutions Designed Around<br>Your Life & Your Future.</h2>
+      <h2>Personalized Coverage Solutions<br>Built Around Your Needs.</h2>
       <p class="section-intro">
         Five areas where a little planning today can make a big
         difference for the people you love. Tap any card to see
@@ -1635,7 +1650,7 @@ footer .brand-logo {height:70px}
       </article>
 
       <article class="service-card reveal">
-        <div class="service-media"><img src="images/photo-retirement-couple.webp" alt="A happy retired couple walking arm in arm" loading="lazy" decoding="async"></div>
+        <div class="service-media"><img src="images/photo-retirement-joy.webp" alt="A smiling retired couple sitting close together outdoors" loading="lazy" decoding="async"></div>
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg></div>
         <h3>Retirement Income</h3>
         <p>
@@ -1815,12 +1830,25 @@ footer .brand-logo {height:70px}
       <div class="service-area">📍 Tulsa County &amp; surrounding areas</div>
 
       <p>
-        Noble Finance Solutions helps families protect what they've built,
-        prepare for future income needs, and plan with greater confidence.
-        Maunty Wright works with business owners, families and retirees to
-        build personalized coverage solutions around their needs, starting
-        with clear information, not a sales pitch.
+        Maunty Wright grew up in Tulsa, where his mother taught him the value of
+        steady work, saving and budgeting. After more than 15 years in television
+        and film in Southern California, he moved into financial services. When a
+        loss in the family brought him home, he founded Noble Finance Solutions to
+        serve Tulsa-area families, retirees and business owners.
       </p>
+      <p>
+        His approach is simple: educate first, skip the jargon, and build a clear,
+        realistic plan, never products you don&rsquo;t need.
+      </p>
+
+      <div class="cred-row">
+        <span>Licensed Independent Financial Professional</span>
+        <span>8+ years of experience</span>
+        <span>SafeMoney Certified&trade;</span>
+        <span>NPN #22312170</span>
+      </div>
+
+      <blockquote class="advisor-quote">&ldquo;Your legacy starts with protection. Let&rsquo;s build it together.&rdquo;<cite>Maunty Wright</cite></blockquote>
 
       <div class="pillars">
         <div class="pillar"><span>1</span><div><strong>Flexible, customized coverage plans</strong><small>Secure your income, protect what matters, plan for what's next.</small></div></div>
@@ -2129,7 +2157,7 @@ const RISKS = [
   },
   {
     short: "Retirement Income",
-    img: "images/photo-retirement-couple.webp",
+    img: "images/photo-retirement-joy.webp",
     stat: 57, prefix: "", suffix: "%", ring: 57,
     statLabel: "of workers believe their savings will last throughout retirement",
     fact: "Only 57% of workers believe their savings will last throughout retirement.",
