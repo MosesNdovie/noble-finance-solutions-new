@@ -1482,6 +1482,28 @@ footer .brand-logo {height:70px}
 .advisor-quote cite {display:block;margin-top:6px;font:600 12px Outfit,sans-serif;font-style:normal;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
 .checkup {background:linear-gradient(180deg,#0b2d63eb 0%,#0e2246f2 60%,#0e2246fa 100%),url(images/photo-checkup-stethoscope.webp) center/cover no-repeat !important}
 @media(max-width:550px){.scene-title{font-size:22px}.scene-sub{font-size:12.5px}.scene-caption{bottom:74px !important}}
+
+/* Hero info panel below the arch (keeps the photo unobstructed) */
+.scene-wrap {padding:24px 0 10px !important;display:flex;flex-direction:column;align-items:flex-end;gap:14px}
+.scene {max-height:430px !important;margin-left:auto}
+.scene-caption {bottom:34px !important}
+.scene-info {width:min(100%,460px);display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.info-card {background:#ffffffee;color:var(--navy);border-radius:16px;box-shadow:0 16px 36px #050b1f55;transition:transform .3s, box-shadow .3s}
+a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
+.info-score {display:flex;align-items:center;gap:12px;padding:12px 14px 12px 12px}
+.info-score small, .info-risks small {display:block;font-size:9.5px;font-weight:800;letter-spacing:1.4px;color:#7d889b}
+.info-score strong {font:700 15px Outfit,sans-serif;color:var(--purple);white-space:nowrap}
+.info-advisor {display:flex;align-items:center;gap:10px;padding:10px 14px 10px 10px}
+.info-advisor img {width:44px;height:44px;border-radius:50%;border:2px solid var(--gold);flex-shrink:0}
+.info-advisor strong {display:block;font:700 14px Outfit,sans-serif}
+.info-advisor small {font-size:11.5px;color:#68758b}
+.info-risks {grid-column:1 / -1;padding:11px 12px}
+.info-risks ul {list-style:none;margin:8px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.info-risks a {display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--navy);background:#eef3fa;border-radius:20px;padding:6px 11px 6px 8px;transition:.2s}
+.info-risks a:before {content:"✓";display:grid;place-items:center;width:15px;height:15px;border-radius:50%;background:#e1f3ea;color:#2f8a63;font-size:9.5px;font-weight:800}
+.info-risks a:hover {background:var(--navy);color:#fff}
+@media(max-width:950px){.scene-wrap{align-items:center}.scene{margin:0 auto}}
+@media(max-width:550px){.scene-info{grid-template-columns:1fr}.info-risks a{font-size:12px}}
 </style>
 </head>
 
@@ -1563,29 +1585,29 @@ footer .brand-logo {height:70px}
         </div>
       </div>
 
-      <a href="#checkup" class="float-card score-card">
-        <div class="mini-gauge">
+      <div class="scene-info">
+        <a href="#checkup" class="info-card info-score">
+          <div class="mini-gauge">
           <svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18" fill="none" stroke="#eef0f5" stroke-width="5"/><circle class="mg" cx="22" cy="22" r="18" fill="none" stroke="#d8ad65" stroke-width="5" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="113"/></svg>
           <b>?</b>
         </div>
-        <div><small>YOUR PROTECTION SCORE</small><strong>Find out in 2 minutes →</strong></div>
-      </a>
-
-      <div class="float-card risks-card">
-        <small>5 RISKS WORTH PLANNING FOR</small>
-        <ul>
-          <li><i></i>Life insurance</li>
-          <li><i></i>Retirement income</li>
-          <li><i></i>Long-term care</li>
-          <li><i></i>Debt protection</li>
-          <li><i></i>Final expense</li>
-        </ul>
+          <div><small>FREE · 2 MINUTES</small><strong>Get your score →</strong></div>
+        </a>
+        <a href="#about" class="info-card info-advisor">
+          <img src="images/maunty-wright.webp" alt="" width="44" height="44">
+          <div><strong>Maunty Wright</strong><small>Your Tulsa advisor</small></div>
+        </a>
+        <div class="info-card info-risks">
+          <small>5 RISKS WORTH PLANNING FOR</small>
+          <ul>
+            <li><a href="#risks" data-risk="0">Life insurance</a></li>
+            <li><a href="#risks" data-risk="1">Retirement income</a></li>
+            <li><a href="#risks" data-risk="2">Long-term care</a></li>
+            <li><a href="#risks" data-risk="3">Debt protection</a></li>
+            <li><a href="#risks" data-risk="4">Final expense</a></li>
+          </ul>
+        </div>
       </div>
-
-      <a href="#about" class="float-card advisor-chip">
-        <img src="images/maunty-wright.webp" alt="" width="44" height="44">
-        <div><strong>Maunty Wright</strong><small>Your local advisor · Tulsa County</small></div>
-      </a>
     </div>
   </div>
 </section>
