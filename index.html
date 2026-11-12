@@ -1541,6 +1541,24 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
 .bio-actions {display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
 .bio-actions .btn {padding:13px 18px;font-size:14px}
 @media(max-width:800px){.bio-shell{grid-template-columns:1fr}.bio-side{padding:30px 22px}.bio-main{padding:28px 22px}.bio-main h3{font-size:24px;margin-right:0}.advisor-open{position:relative;top:0;min-height:430px}.bio-hint{top:16px;left:16px;right:auto;bottom:auto;padding:8px 13px;font-size:12px}.bio-help{grid-template-columns:1fr}}
+
+/* Six service cards: clean 3x2 grid */
+.service-grid.six {grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch}
+.service-grid.six .service-card {grid-column:auto !important;display:flex;flex-direction:column}
+.service-grid.six .service-card > a {margin-top:auto;align-self:flex-start}
+.service-grid.six .service-media {aspect-ratio:16/10 !important}
+.svc-tag {margin:-4px 0 8px;font:italic 600 16px var(--serif);color:#a87a2f}
+.svc-short {font-weight:600;color:var(--navy) !important}
+.service-card a.svc-link {color:var(--navy);display:inline-flex;align-items:center;gap:6px;border-bottom:2px solid var(--gold);padding-bottom:2px;font-weight:700}
+.service-card a.svc-link:after {content:"";position:absolute;inset:0;z-index:2;border-radius:inherit}
+.service-media img {image-rendering:auto}
+@media(max-width:1000px){.service-grid.six{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.service-grid.six{grid-template-columns:1fr}}
+/* Safe Money seal */
+.seal-badge {position:absolute;right:20px;top:20px;width:104px;height:104px;z-index:2;filter:drop-shadow(0 10px 20px #0006)}
+.seal-inline {height:62px;width:62px}
+.bio-seal {display:block;width:110px;height:110px;margin:0 auto 14px;background:#fff;border-radius:50%;padding:4px}
+@media(max-width:800px){.seal-badge{width:78px;height:78px;right:14px;top:14px}}
 </style>
 </head>
 
@@ -1565,7 +1583,6 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
       <a href="#risks">5 Risks</a>
       <a href="#checkup">Health Check</a>
       <a href="#about">Meet Maunty</a>
-      <a href="#process">How It Works</a>
       <a href="#contact" class="btn btn-gold">Book a Review ↗</a>
     </div>
 
@@ -1592,8 +1609,8 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
       </h1>
 
       <p>
-        Education-driven financial guidance for business owners,
-        families and retirees in Tulsa County and surrounding areas.
+        Education-driven financial guidance for families, retirees,
+        and business owners in Tulsa County and surrounding areas.
         Clear information. Practical options. No one-size-fits-all approach.
       </p>
 
@@ -1614,7 +1631,7 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
 
     <div class="scene-wrap reveal">
       <div class="scene">
-        <img class="scene-art" src="images/photo-green-pastures.webp" alt="A quiet road winding through green pastures toward the mountains" width="1300" height="1300" fetchpriority="high">
+        <img class="scene-art" src="images/photo-green-pastures.jpg" alt="A quiet road winding through green pastures toward the mountains" width="1600" height="1600" fetchpriority="high">
         <div class="scene-shade"></div>
         <div class="scene-caption">
           <h2 class="scene-title">Peace of Mind on the Road to Greener Pastures.</h2>
@@ -1687,49 +1704,43 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
       <div class="eyebrow">WHAT WE OFFER</div>
       <h2>Personalized Coverage Solutions<br>Built Around Your Needs.</h2>
       <p class="section-intro">
-        Five areas where a little planning today can make a big
+        Six areas where a little planning today can make a big
         difference for the people you love. Tap any card to see
         the risk behind it.
       </p>
     </div>
 
-    <div class="service-grid five">
+    <div class="service-grid six">
 
       <article class="service-card reveal">
-        <div class="service-media"><img src="images/photo-family.webp" alt="Three generations of a smiling family together outdoors" loading="lazy" decoding="async"></div>
+        <div class="service-media"><img src="images/photo-family.jpg" alt="Three generations of a smiling family together outdoors" loading="lazy" decoding="async"></div>
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
         <h3>Life Insurance</h3>
-        <p>
-          Financial security for your loved ones: help cover
-          daily living expenses and keep their future on track
-          if something happens to you.
-        </p>
+        <p class="svc-tag">Peace of Mind, Policy in Hand</p>
+        <p class="svc-short">A flexible coverage plan that&rsquo;s customized to fit your unique financial needs and future goals.</p>
+        <p>Build a foundation that empowers you to thrive from this day forward. Customizable coverage provides a reliable bridge, ensuring your mortgage stays paid and your children&rsquo;s college funds remain secure through a powerful financial engine that safeguards your household today and guarantees a tax-free legacy they can always depend on.</p>
         <span class="stat-chip">40% of U.S. adults say they need more</span><br>
         <a href="#risks" data-risk="0" aria-label="Life Insurance: see the risk">See the risk ↗</a>
       </article>
 
       <article class="service-card reveal">
-        <div class="service-media"><img src="images/photo-retirement-joy.webp" alt="A smiling retired couple sitting close together outdoors" loading="lazy" decoding="async"></div>
+        <div class="service-media"><img src="images/photo-retirement-couple.jpg" alt="A smiling retired couple sitting close together outdoors" loading="lazy" decoding="async"></div>
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg></div>
         <h3>Retirement Income</h3>
-        <p>
-          Tax-smart retirement strategies built to help make
-          sure you never outlive your money, even through
-          market downturns and inflation.
-        </p>
+        <p class="svc-tag">Retire Confident, Live Fully</p>
+        <p class="svc-short">Strategies designed to create a reliable, tax-efficient income stream that lasts as long as you do.</p>
+        <p>Securing your financial freedom in your next chapter requires a reliable strategy that transforms your hard-earned savings into a predictable paycheck. A robust retirement income product provides guaranteed monthly payments, protects your nest egg from market volatility, and ensures you never outlive your money.</p>
         <span class="stat-chip">Only 57% think savings will last</span><br>
         <a href="#risks" data-risk="1" aria-label="Retirement Income: see the risk">See the risk ↗</a>
       </article>
 
       <article class="service-card reveal">
-        <div class="service-media"><img src="images/photo-caregiver.webp" alt="A caregiver sharing a warm moment with an older woman in a wheelchair" loading="lazy" decoding="async"></div>
+        <div class="service-media"><img src="images/photo-caregiver.jpg" alt="A caregiver sharing a warm moment with an older woman in a wheelchair" loading="lazy" decoding="async"></div>
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z"/></svg></div>
         <h3>Long-Term Care</h3>
-        <p>
-          Thoughtful coverage built around dignity, choice and
-          long-term security, so your savings and your family
-          have more options.
-        </p>
+        <p class="svc-tag">Preserve Dignity and Independence</p>
+        <p class="svc-short">Thoughtful coverage designed to protect your savings, independence, and your family&rsquo;s financial stability.</p>
+        <p>Long-term care protection can help provide financial support for services such as in-home care, assisted living, and skilled nursing care, helping reduce the emotional and financial burden on loved ones. The right strategy can help preserve your assets, protect your retirement income, and maintain greater control over how and where care is received.</p>
         <span class="stat-chip">~70% chance of needing care after 65</span><br>
         <a href="#risks" data-risk="2" aria-label="Long-Term Care: see the risk">See the risk ↗</a>
       </article>
@@ -1747,7 +1758,7 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
       </article>
 
       <article class="service-card reveal">
-        <div class="service-media"><img src="images/risk-final.jpg" alt="White lilies resting on stone in warm evening light" loading="lazy" decoding="async"></div>
+        <div class="service-media"><img src="images/photo-sunrise-path.jpg" alt="A quiet path through green fields toward a golden sunrise" loading="lazy" decoding="async"></div>
         <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="2.5"/><path d="M12 9.5C10 7 10 4 12 2c2 2 2 5 0 7.5M14.5 12c2.5-2 5.5-2 7.5 0-2 2-5 2-7.5 0M12 14.5c2 2.5 2 5.5 0 7.5-2-2-2-5 0-7.5M9.5 12C7 14 4 14 2 12c2-2 5-2 7.5 0"/></svg></div>
         <h3>Final Expense</h3>
         <p>
@@ -1756,6 +1767,16 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
         </p>
         <span class="stat-chip">Funerals can exceed $8,000</span><br>
         <a href="#risks" data-risk="4" aria-label="Final Expense: see the risk">See the risk ↗</a>
+      </article>
+
+      <article class="service-card reveal">
+        <div class="service-media"><img src="images/photo-employee-benefits.jpg" alt="A smiling team of workers in a manufacturing facility" loading="lazy" decoding="async"></div>
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Employee Benefits</h3>
+        <p class="svc-tag">Protect Your Team, Grow Your Business</p>
+        <p>Protecting your team is one of the smartest investments a business owner can make. Our employee benefits solutions are designed to help small and mid-sized businesses attract and retain top talent &mdash; offering life insurance, health coverage, and supplemental benefits that give your employees real peace of mind. We work with business owners to build customized benefits packages that fit their budget and their team&rsquo;s needs, because when your people feel protected, your business thrives.</p>
+        <span class="stat-chip">For small &amp; mid-sized businesses</span><br>
+        <a href="mailto:contact@noblefinancesolutions.com?subject=Employee%20Benefits" class="svc-link" aria-label="Employee Benefits: talk to Maunty">Talk to Maunty ↗</a>
       </article>
 
     </div>
@@ -1872,13 +1893,11 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
       <div class="orbit"></div>
       <div class="orbit two"></div>
       <div class="orbit three"></div>
-      <img class="advisor-photo" src="images/maunty-wright.webp" alt="Portrait of Maunty Wright, Life Insurance and Finance Professional" width="320" height="320" loading="lazy">
-      <div class="badge-row">
-        <span><b>✓</b> Safe Money Certified</span>
-      </div>
+      <img class="advisor-photo" src="images/maunty-wright.webp" alt="Portrait of Maunty Wright, Life Insurance Broker and Finance Professional" width="320" height="320" loading="lazy">
+      <img class="seal-badge" src="images/safe-money-certified.png" alt="Safe Money Certified seal" width="464" height="464">
       <div class="name-card">
         <strong>Maunty Wright</strong>
-        <small>Life Insurance &amp; Finance Professional</small>
+        <small>Life Insurance Broker &amp; Finance Professional</small>
       </div>
       <span class="bio-hint">View full bio <span aria-hidden="true">→</span></span>
     </button>
@@ -1891,7 +1910,7 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
 
       <p>
         Tulsa-raised and education-first, Maunty Wright founded Noble Finance
-        Solutions to help local families, retirees and business owners protect what
+        Solutions to help local families, retirees, and business owners protect what
         they&rsquo;ve built, with clear information and a realistic plan, never
         products you don&rsquo;t need.
       </p>
@@ -1912,6 +1931,7 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
       </div>
 
       <div class="trust-row">
+        <img class="seal-inline" src="images/safe-money-certified.png" alt="Safe Money Certified" width="464" height="464">
         <a class="bbb-link" href="https://www.bbb.org/us/ok/tulsa/profile/insurance-agency/noble-finance-solutions-1025-38111690/#sealclick" target="_blank" rel="noopener noreferrer" aria-label="Noble Finance Solutions is a BBB Accredited Business: view the BBB profile">
           <img src="images/bbb-accredited-horizontal.png" alt="BBB Accredited Business" width="448" height="160">
         </a>
@@ -1935,7 +1955,7 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
     <aside class="bio-side">
       <img src="images/maunty-wright.webp" alt="Portrait of Maunty Wright" width="220" height="220">
       <h2 id="bioTitle">Maunty Wright</h2>
-      <p class="bio-role">Life Insurance &amp; Finance Professional</p>
+      <p class="bio-role">Life Insurance Broker &amp; Finance Professional</p>
       <p class="bio-firm">Founder, Noble Finance Solutions<br>Tulsa, Oklahoma</p>
       <ul class="bio-creds">
         <li>Licensed Independent Financial Professional</li>
@@ -1943,22 +1963,26 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
         <li>SafeMoney Certified&trade;</li>
         <li>NPN #22312170</li>
       </ul>
+      <img class="bio-seal" src="images/safe-money-certified.png" alt="Safe Money Certified" width="464" height="464">
       <a class="bio-bbb" href="https://www.bbb.org/us/ok/tulsa/profile/insurance-agency/noble-finance-solutions-1025-38111690/#sealclick" target="_blank" rel="noopener noreferrer"><img src="images/bbb-accredited-horizontal.png" alt="BBB Accredited Business" width="448" height="160"></a>
     </aside>
     <div class="bio-main">
       <div class="eyebrow">MEET YOUR ADVISOR</div>
-      <h3>From Tulsa roots to protecting Tulsa families.</h3>
-      <p>Maunty grew up in Tulsa, Oklahoma, where his mother taught him the lessons that still guide his work: show up steadily, save what you can, and keep a budget you can live with.</p>
-      <p>He went on to spend more than 15 years working in television and film in Southern California. As that industry changed, through the disruption of COVID-19 and the rise of AI, he turned toward a career where he could make a lasting difference in people&rsquo;s lives: financial services.</p>
-      <p>When a death in the family brought him back home, Maunty founded Noble Finance Solutions to serve the families, retirees and business owners of Tulsa County and the surrounding areas.</p>
-      <h4>How he works</h4>
-      <p>Maunty believes good decisions start with understanding. He takes time to explain options in plain language, skips the jargon, and builds a clear, realistic plan around each client&rsquo;s goals, never pushing products they don&rsquo;t need.</p>
+      <h3>In Maunty&rsquo;s words</h3>
+      <p>At Noble Finance Solutions, I believe that protecting your family and securing your future shouldn&rsquo;t be complicated or reserved for the wealthy.</p>
+      <p>My story starts in Tulsa, Oklahoma, where I learned early that real wealth isn&rsquo;t just about what you earn &mdash; it&rsquo;s about what you protect. My first teacher was my mother. She built a strong financial foundation the hard way through steady work, strict saving, and disciplined budgeting. Those early life lessons gave me profound respect for hard work and dedication. It also prompted a lasting question: what becomes possible when discipline is paired with sound financial strategy?</p>
+      <p>That question followed me to Southern California, where I began my career in television and film. I spent over 15 years building a solid career in entertainment, and along the way I was quietly doing something most people in that industry weren&rsquo;t: studying money. I was learning the principles of wealth-building, financial literacy, and managing my finances with intention long before it became my profession.</p>
+      <p>Following the disruptions of COVID-19 that led to the industry downturn, and the accelerating shift toward artificial intelligence, work slowed and uncertainty increased. Like many people, I found myself trying to adapt to a changing economy &mdash; the transition into financial services wasn&rsquo;t a leap of faith. It was a natural next step. Soon into my career transition, life reminded me what really matters. A death in my family brought me back to my roots in Tulsa, Oklahoma, where I found a community full of hardworking families and business owners who needed exactly what I had spent years preparing to offer. Noble Finance Solutions was built to serve them.</p>
+      <p>I&rsquo;m a finance professional with a primary focus in life insurance, retirement income, and long-term care protection &mdash; three essential pillars that help families protect what they&rsquo;ve built, prepare for future income needs, and plan with greater confidence. Providing solutions that prevent financial devastation for my clients makes this work incredibly rewarding. When clients tell me they finally have peace of mind, or that they&rsquo;re sleeping better at night knowing their family is protected &mdash; that&rsquo;s when I know I&rsquo;m truly being of service. I often feel like I&rsquo;m answering a higher calling in a way my previous career never did.</p>
+      <p>Instead of overwhelming you with jargon or unneeded products, I will educate and guide you to a clear, realistic plan you can execute with confidence.</p>
       <h4>How he can help</h4>
       <ul class="bio-help">
         <li>Life insurance</li>
         <li>Retirement income planning</li>
         <li>Annuities (fixed &amp; indexed)</li>
         <li>Long-term care planning</li>
+        <li>Employee benefits</li>
+        <li>Final expense &amp; debt protection</li>
       </ul>
       <blockquote class="advisor-quote">&ldquo;Your legacy starts with protection. Let&rsquo;s build it together.&rdquo;<cite>Maunty Wright</cite></blockquote>
       <div class="bio-actions">
@@ -1970,60 +1994,7 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
   </div>
 </dialog>
 
-<!-- PROCESS -->
 
-<section class="section process" id="process">
-  <div class="container">
-
-    <div class="center reveal">
-      <div class="eyebrow">OUR APPROACH</div>
-      <h2>Financial Confidence<br>Starts With a Conversation.</h2>
-      <p class="section-intro">
-        We believe financial decisions should be understandable,
-        thoughtful and centered on your goals.
-      </p>
-    </div>
-
-    <div class="process-photos reveal">
-      <figure><img src="images/photo-team-meeting.webp" alt="An advisor walking clients through a plan on a tablet" loading="lazy" decoding="async"><figcaption>Real conversations</figcaption></figure>
-      <figure><img src="images/photo-planning-desk.webp" alt="A planning desk with financial charts, a notebook, a laptop and coffee" loading="lazy" decoding="async"><figcaption>A clear, written plan</figcaption></figure>
-    </div>
-
-    <div class="steps">
-
-      <div class="step reveal">
-        <div class="step-top"><div class="step-no">01</div><span class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span></div>
-        <h3>Discover</h3>
-        <p>
-          We begin by understanding your personal
-          circumstances, financial priorities and
-          what matters most to you.
-        </p>
-      </div>
-
-      <div class="step reveal">
-        <div class="step-top"><div class="step-no">02</div><span class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></svg></span></div>
-        <h3>Design</h3>
-        <p>
-          Together, we explore relevant options
-          and explain how different solutions
-          may address your needs.
-        </p>
-      </div>
-
-      <div class="step reveal">
-        <div class="step-top"><div class="step-no">03</div><span class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22V4M4 15s1.5-1.5 5-1.5 5 2 8 2 3-1 3-1V4s-1 1-3 1-5-2-8-2-5 1.5-5 1.5"/></svg></span></div>
-        <h3>Move Forward</h3>
-        <p>
-          Make decisions with greater clarity
-          and revisit your financial priorities
-          as life evolves.
-        </p>
-      </div>
-
-    </div>
-  </div>
-</section>
 
 <!-- BRAND MESSAGE -->
 
@@ -2040,7 +2011,6 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
       It's the future you're creating for yourself
       and the people you love.
     </h2>
-    <div class="signature">People. Plans. Possibilities.</div>
   </div>
 </section>
 
@@ -2078,7 +2048,7 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
       <details>
         <summary>What areas do you serve?</summary>
         <p>
-          We serve business owners, families and retirees in Tulsa County
+          We serve families, retirees, and business owners in Tulsa County
           and surrounding areas.
         </p>
       </details>
@@ -2160,9 +2130,8 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
 
         <p style="max-width:340px;margin-top:25px">
           Education-driven financial guidance for families,
-          business owners and retirees in Tulsa County
-          and surrounding areas.<br><br>
-          <em style="color:#d8ad65;font-family:Georgia,serif;font-size:17px">People. Plans. Possibilities.</em>
+          retirees, and business owners in Tulsa County
+          and surrounding areas.
         </p>
         <a class="footer-bbb" href="https://www.bbb.org/us/ok/tulsa/profile/insurance-agency/noble-finance-solutions-1025-38111690/#sealclick" target="_blank" rel="noopener noreferrer" aria-label="BBB Accredited Business: view the BBB profile">
           <img src="images/bbb-accredited-vertical.png" alt="BBB Accredited Business" width="175" height="260" loading="lazy">
@@ -2244,7 +2213,7 @@ if ("IntersectionObserver" in window) {
 const RISKS = [
   {
     short: "Life Insurance",
-    img: "images/photo-family.webp",
+    img: "images/photo-family.jpg",
     stat: 40, prefix: "", suffix: "%", ring: 40,
     statLabel: "of U.S. adults say they need more life insurance",
     fact: "40% of U.S. adults say they need more life insurance.",
@@ -2253,7 +2222,7 @@ const RISKS = [
   },
   {
     short: "Retirement Income",
-    img: "images/photo-retirement-joy.webp",
+    img: "images/photo-retirement-couple.jpg",
     stat: 57, prefix: "", suffix: "%", ring: 57,
     statLabel: "of workers believe their savings will last throughout retirement",
     fact: "Only 57% of workers believe their savings will last throughout retirement.",
@@ -2262,7 +2231,7 @@ const RISKS = [
   },
   {
     short: "Long-Term Care",
-    img: "images/photo-caregiver.webp",
+    img: "images/photo-caregiver.jpg",
     stat: 70, prefix: "~", suffix: "%", ring: 70,
     statLabel: "chance someone turning 65 will need some form of long-term care",
     fact: "Someone turning 65 has nearly a 70% chance of needing some form of long-term care.",
@@ -2280,7 +2249,7 @@ const RISKS = [
   },
   {
     short: "Final Expense",
-    img: "images/risk-final.jpg",
+    img: "images/photo-sunrise-path.jpg",
     stat: 8000, prefix: "$", suffix: "+", ring: 100,
     statLabel: "median funeral costs can exceed this amount",
     fact: "Median funeral costs can exceed $8,000.",
