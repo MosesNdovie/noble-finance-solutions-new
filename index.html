@@ -1560,7 +1560,31 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
 .seal-inline {height:62px;width:62px}
 .bio-seal {display:block;width:110px;height:110px;margin:0 auto 14px;background:#fff;border-radius:50%;padding:4px}
 @media(max-width:800px){.seal-badge{width:78px;height:78px;right:14px;top:14px}}
+
+/* Health Check lead form + delivery */
+.lead-form {margin-top:4px;padding:20px;border:1px solid var(--border);border-radius:16px;background:#fbfaf7}
+.lead-title {margin:0 0 12px !important;font:700 15px Outfit,sans-serif;color:var(--navy)}
+.lead-grid {display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.lead-grid label {display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:var(--navy)}
+.lead-grid label span {font-weight:500;color:var(--muted)}
+.lead-grid input {font:500 15px "DM Sans",sans-serif;padding:12px 13px;border:1.5px solid var(--border);border-radius:11px;background:#fff;color:var(--text);min-height:46px}
+.lead-grid input:focus {outline:none;border-color:var(--purple);box-shadow:0 0 0 3px #1f5bb522}
+.consent {display:flex;gap:10px;align-items:flex-start;margin:14px 0 6px;font-size:12.5px;line-height:1.55;color:var(--muted);cursor:pointer}
+.consent input {width:18px;height:18px;margin-top:2px;flex-shrink:0;accent-color:var(--navy)}
+.hp {position:absolute !important;left:-9999px;width:1px;height:1px;overflow:hidden}
+.lead-error {min-height:18px;margin:4px 0 10px !important;color:#b4537b !important;font-size:13px;font-weight:600}
+.deliver {margin-top:18px;padding:12px 16px;border-radius:12px;background:#eef3fa;color:var(--navy);font-size:14px;line-height:1.5;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.deliver.ok {background:#e8f6ef;color:#1f6b4b}
+.deliver.warn {background:#fbf2e2;color:#7a5520}
+.deliver .link-btn {padding:0;margin-left:4px;text-decoration:underline}
+.spin {width:14px;height:14px;border:2px solid #1f5bb544;border-top-color:#1f5bb5;border-radius:50%;display:inline-block;animation:spin .8s linear infinite}
+@keyframes spin {to{transform:rotate(360deg)}}
+@media(max-width:700px){.lead-grid{grid-template-columns:1fr}}
+
+.lead-grid label {justify-content:flex-end}
+.checkup-side .qr-box {flex-direction:column;align-items:flex-start;text-align:left}
 </style>
+<script src="vendor/jspdf.umd.min.js" defer></script>
 </head>
 
 <body>
@@ -1865,8 +1889,8 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
           <div class="privacy">
             <span>🔒</span>
             <div>
-              <h3>Your answers stay with you</h3>
-              <p>This quick check runs entirely in your browser. Nothing is sent or stored unless you choose to share your results with us.</p>
+              <h3>Your information stays private</h3>
+              <p>Your details and results go only to you and Maunty, so he can follow up. Your information is never sold or shared.</p>
             </div>
           </div>
         </div>
@@ -2386,6 +2410,7 @@ const TIERS = [
 
 const quiz = document.getElementById("quiz");
 let answers = [];
+let lead = { name: "", email: "", phone: "", consent: false };
 let qIndex = 0;
 
 function quizStart() {
@@ -2398,11 +2423,38 @@ function quizStart() {
       <div class="cover-list">
         ${RISKS.map((r, i) => `<div><b>${i + 1}</b>${r.short}</div>`).join("")}
       </div>
-      <div class="chips"><span>✓ Free</span><span>✓ No obligation</span><span>✓ Instant results</span></div>
-      <button class="btn btn-purple" id="quizGo" type="button">Start My Health Check ↗</button>
+      <div class="chips"><span>✓ Free</span><span>✓ No obligation</span><span>✓ PDF results by email</span></div>
+      <form class="lead-form" id="leadForm" novalidate>
+        <p class="lead-title">Where should we send your results?</p>
+        <div class="lead-grid">
+          <label>Full name<input type="text" name="name" autocomplete="name" required value="${esc(lead.name)}"></label>
+          <label>Email<input type="email" name="email" autocomplete="email" required value="${esc(lead.email)}"></label>
+          <label>Phone<input placeholder="Optional" type="tel" name="phone" autocomplete="tel" value="${esc(lead.phone)}"></label>
+        </div>
+        <label class="hp" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        <label class="consent"><input type="checkbox" name="consent" ${lead.consent ? "checked" : ""} required>
+          <span>Email me a PDF of my results, and I&rsquo;d like Noble Finance Solutions to contact me about them. I understand this is an educational follow-up, not an insurance application, and no purchase is required.</span></label>
+        <p class="lead-error" id="leadError" role="alert"></p>
+        <button class="btn btn-purple" id="quizGo" type="submit">Start My Health Check ↗</button>
+      </form>
     </div>`;
-  document.getElementById("quizGo").addEventListener("click", () => renderQuestion(true));
+  document.getElementById("leadForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const f = e.target, err = document.getElementById("leadError");
+    const name = f.name.value.trim(), email = f.email.value.trim(), phone = f.phone.value.trim();
+    let msg = "";
+    if (name.length < 2) msg = "Please enter your full name.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) msg = "Please enter a valid email address.";
+    else if (phone && phone.replace(/\D/g, "").length < 7) msg = "Please check your phone number, or leave it blank.";
+    else if (!f.consent.checked) msg = "Please tick the box so we can send your results.";
+    err.textContent = msg;
+    if (msg) return;
+    lead = { name, email, phone, consent: true, website: f.website.value, started: Date.now() };
+    renderQuestion(true);
+  });
 }
+
+function esc(v) { return String(v || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 
 function renderQuestion(focus) {
   const item = QUESTIONS[qIndex];
@@ -2482,7 +2534,8 @@ function renderResult() {
       <a class="btn btn-purple" id="resBook">Book My Review ↗</a>
       ${low < 20 ? `<a class="btn btn-ghost" href="#risks" id="resRisk">Explore ${RISKS[priority].short}</a>` : ""}
       <button type="button" class="link-btn" id="resRetake">↺ Retake</button>
-    </div>`;
+    </div>
+    <div class="deliver" id="deliver" role="status" aria-live="polite"><span class="spin"></span> Preparing your PDF report&hellip;</div>`;
 
   const body = [
     `Hi Maunty,`, ``,
@@ -2499,6 +2552,8 @@ function renderResult() {
   const rr = document.getElementById("resRisk");
   if (rr) rr.addEventListener("click", () => { stopAuto(); showRisk(priority); });
 
+  deliverResults({ score, tier, cats, priority, low });
+
   requestAnimationFrame(() => requestAnimationFrame(() => {
     document.getElementById("gFg").style.strokeDashoffset = 326.7 * (1 - score / 100);
     quiz.querySelectorAll(".fill").forEach(f => f.style.width = f.dataset.w + "%");
@@ -2508,6 +2563,154 @@ function renderResult() {
     const tick = t => { const p = Math.min((t - t0) / 1500, 1); n.textContent = Math.round(score * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); };
     requestAnimationFrame(tick);
   }));
+}
+
+// ================= HEALTH CHECK: PDF REPORT + EMAIL DELIVERY =================
+const NFS_LOGO = "images/noble-logo-official.png";
+let lastReport = null;
+
+function loadImageData(src, width = 520) {
+  // Draw the logo onto a small white canvas so the PDF stays light (~100 KB).
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement("canvas");
+      c.width = width; c.height = Math.round(img.height * width / img.width);
+      const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height);
+      x.drawImage(img, 0, 0, c.width, c.height);
+      res(c.toDataURL("image/jpeg", 0.9));
+    };
+    img.onerror = () => res(null);
+    img.src = src;
+  });
+}
+
+async function buildReportPdf(r) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: "pt", format: "letter", compress: true });
+  const W = 612, M = 54, navy = [11, 45, 99], gold = [201, 161, 90], ink = [29, 36, 51], muted = [91, 100, 114];
+  const date = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  const logo = await loadImageData(NFS_LOGO);
+
+  // header
+  if (logo) doc.addImage(logo, "JPEG", M, 40, 132, 61);
+  doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(...navy);
+  doc.text("Maunty Wright", W - M, 56, { align: "right" });
+  doc.setFont("helvetica", "normal"); doc.setTextColor(...muted);
+  doc.text(["Life Insurance Broker & Finance Professional", "Tulsa, Oklahoma · NPN #22312170", "(539) 237-7273 · contact@noblefinancesolutions.com"], W - M, 69, { align: "right" });
+  doc.setDrawColor(...navy); doc.setLineWidth(1.5); doc.line(M, 112, W - M, 112);
+  doc.setDrawColor(...gold); doc.setLineWidth(2); doc.line(M, 116, M + 80, 116);
+
+  // title
+  let y = 150;
+  doc.setTextColor(...gold); doc.setFont("helvetica", "bold"); doc.setFontSize(9);
+  doc.text("FINANCIAL PROTECTION HEALTH CHECK", M, y);
+  doc.setTextColor(...ink); doc.setFontSize(22);
+  doc.text(`Results for ${r.name}`, M, y + 26);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(...muted);
+  doc.text(date, M, y + 44);
+
+  // score block
+  y = 220;
+  doc.setFillColor(243, 245, 248); doc.roundedRect(M, y, W - 2 * M, 112, 10, 10, "F");
+  doc.setFillColor(...navy); doc.circle(M + 62, y + 56, 40, "F");
+  doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(28);
+  doc.text(String(r.score), M + 62, y + 62, { align: "center" });
+  doc.setFontSize(7); doc.text("OUT OF 100", M + 62, y + 76, { align: "center" });
+  doc.setTextColor(...navy); doc.setFontSize(10); doc.text(r.tier.name, M + 122, y + 34);
+  doc.setTextColor(...ink); doc.setFontSize(15); doc.text(`Your Financial Protection Score is ${r.score}.`, M + 122, y + 54);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(...muted);
+  doc.text(doc.splitTextToSize(r.tier.msg.replace(/[“”]/g, '"'), W - 2 * M - 140), M + 122, y + 72);
+
+  // category bars
+  y = 362;
+  doc.setTextColor(...ink); doc.setFont("helvetica", "bold"); doc.setFontSize(12);
+  doc.text("Your score by area", M, y);
+  y += 20;
+  r.cats.forEach((v, i) => {
+    const pr = i === r.priority && r.low < 20;
+    doc.setFont("helvetica", pr ? "bold" : "normal"); doc.setFontSize(10);
+    doc.setTextColor(...(pr ? [180, 83, 123] : ink));
+    doc.text(RISKS[i].short + (pr ? "  (priority)" : ""), M, y + 9);
+    doc.setFillColor(238, 240, 245); doc.roundedRect(M + 170, y, 260, 10, 5, 5, "F");
+    const col = v >= 16 ? [47, 138, 99] : v >= 10 ? [31, 91, 181] : v >= 6 ? [216, 173, 101] : [180, 83, 123];
+    if (v > 0) { doc.setFillColor(...col); doc.roundedRect(M + 170, y, Math.max(10, 260 * v / 20), 10, 5, 5, "F"); }
+    doc.setTextColor(...muted); doc.setFont("helvetica", "normal");
+    doc.text(`${v}/20`, W - M, y + 9, { align: "right" });
+    y += 24;
+  });
+
+  // areas worth a closer look
+  y += 10;
+  const focus = r.cats.map((v, i) => ({ v, i })).filter(o => o.v < 16).sort((a, b) => a.v - b.v).slice(0, 2);
+  if (focus.length) {
+    doc.setTextColor(...ink); doc.setFont("helvetica", "bold"); doc.setFontSize(12);
+    doc.text("Areas worth a closer look", M, y); y += 18;
+    focus.forEach(o => {
+      const k = RISKS[o.i];
+      doc.setFont("helvetica", "bold"); doc.setFontSize(10.5); doc.setTextColor(...navy);
+      doc.text(k.short, M, y); y += 14;
+      doc.setFont("helvetica", "normal"); doc.setFontSize(9.5); doc.setTextColor(...muted);
+      const lines = doc.splitTextToSize(`${k.fact} ${k.questions.map(q => "• " + q).join("  ")}`, W - 2 * M);
+      doc.text(lines, M, y); y += lines.length * 12 + 10;
+    });
+  }
+
+  // next steps
+  y = Math.max(y + 4, 628);
+  doc.setFillColor(...navy); doc.roundedRect(M, y, W - 2 * M, 74, 10, 10, "F");
+  doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(12);
+  doc.text("Next step: a free Financial Protection & Retirement Review", M + 18, y + 26);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(214, 222, 238);
+  doc.text("Call (539) 237-7273 or email contact@noblefinancesolutions.com. No pressure, no obligation.", M + 18, y + 46);
+  doc.text("noblefinancesolutions.com", M + 18, y + 61);
+
+  // disclaimer
+  doc.setFontSize(7.5); doc.setTextColor(138, 147, 163);
+  doc.text(doc.splitTextToSize("This checkup is for educational purposes and provides a general snapshot based on your responses. It is not a comprehensive financial, insurance, investment, tax, or legal analysis.", W - 2 * M), M, 742);
+  return doc;
+}
+
+async function deliverResults(res) {
+  const box = document.getElementById("deliver");
+  const data = { ...res, name: lead.name, email: lead.email, phone: lead.phone };
+  const fileName = `Noble-Health-Check-${(lead.name || "Results").replace(/[^A-Za-z0-9]+/g, "-")}.pdf`;
+  let doc;
+  try {
+    for (let i = 0; i < 50 && !window.jspdf; i++) await new Promise(r => setTimeout(r, 100));
+    doc = await buildReportPdf(data);
+  } catch (e) {
+    box.innerHTML = "We couldn&rsquo;t create your PDF just now, but your results are shown above. Use <b>Book My Review</b> to reach Maunty.";
+    return;
+  }
+  lastReport = { doc, fileName };
+  const dl = `<button type="button" class="link-btn" id="dlPdf">Download PDF</button>`;
+  const bindDl = () => document.getElementById("dlPdf").addEventListener("click", () => lastReport.doc.save(lastReport.fileName));
+
+  if (!window.NFS_API) {               // preview hosting without the email service
+    box.innerHTML = `Your PDF report is ready. ${dl}`; bindDl(); return;
+  }
+  box.innerHTML = `<span class="spin"></span> Emailing your PDF to <b>${esc(lead.email)}</b>&hellip;`;
+  const fd = new FormData();
+  fd.append("action", "nfs_checkup");
+  fd.append("name", lead.name); fd.append("email", lead.email); fd.append("phone", lead.phone);
+  fd.append("consent", "1"); fd.append("website", lead.website || "");
+  fd.append("elapsed", String(Math.round((Date.now() - (lead.started || Date.now())) / 1000)));
+  fd.append("score", String(res.score)); fd.append("tier", res.tier.name);
+  fd.append("cats", JSON.stringify(res.cats));
+  fd.append("answers", JSON.stringify(answers));
+  fd.append("pdf", doc.output("datauristring"));
+  try {
+    const r = await fetch(window.NFS_API.url, { method: "POST", body: fd, credentials: "same-origin" });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.success) throw new Error((j.data && j.data.msg) || "send failed");
+    box.classList.add("ok");
+    box.innerHTML = `✓ Your PDF report is on its way to <b>${esc(lead.email)}</b>. Check your spam folder if you don&rsquo;t see it in a few minutes. ${dl}`;
+  } catch (e) {
+    box.classList.add("warn");
+    box.innerHTML = `We couldn&rsquo;t email your report right now${e.message && e.message !== "send failed" ? ` (${esc(e.message)})` : ""}. You can download it here: ${dl}`;
+  }
+  bindDl();
 }
 
 quizStart();
