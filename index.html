@@ -1603,6 +1603,15 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
 
 .dl-btn {display:inline-flex;align-items:center;gap:8px}
 .dl-btn:disabled {opacity:.5;cursor:wait}
+
+.send-form {margin-top:12px;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#fbfaf7}
+.send-form label {display:block;font:700 13px Outfit,sans-serif;color:var(--navy);margin-bottom:8px}
+.send-row {display:flex;gap:10px;flex-wrap:wrap}
+.send-row input {flex:1 1 220px;font:500 15px "DM Sans",sans-serif;padding:11px 13px;border:1.5px solid var(--border);border-radius:11px;min-height:44px}
+.send-row input:focus {outline:none;border-color:var(--purple);box-shadow:0 0 0 3px #1f5bb522}
+.send-row .btn {padding:11px 22px;font-size:14px}
+.send-msg {margin:8px 0 0 !important;font-size:13px;min-height:16px;color:var(--muted)}
+.send-msg.ok {color:#1f6b4b} .send-msg.warn {color:#b4537b}
 </style>
 <script src="vendor/jspdf.umd.min.js" defer></script>
 </head>
@@ -2655,7 +2664,15 @@ function renderResult() {
       ${low < 20 && riskIdx !== null ? `<a class="btn btn-ghost" href="#risks" id="resRisk">Learn about ${CATS[priority].name}</a>` : ""}
       <button type="button" class="link-btn" id="resRetake">↺ Retake</button>
     </div>
-    <div class="deliver" id="deliver" role="status" aria-live="polite"><span class="spin"></span> Preparing your PDF report&hellip;</div>`;
+    <div class="deliver" id="deliver" role="status" aria-live="polite"><span class="spin"></span> Preparing your PDF report&hellip;</div>
+    <form class="send-form" id="sendForm" hidden>
+      <label for="sendTo">Email my PDF to</label>
+      <div class="send-row">
+        <input type="email" id="sendTo" autocomplete="email" required>
+        <button type="submit" class="btn btn-purple" id="sendBtn">Send</button>
+      </div>
+      <p class="send-msg" id="sendMsg" role="status" aria-live="polite"></p>
+    </form>`;
 
   const body = [
     `Hi Maunty,`, ``,
@@ -2813,6 +2830,36 @@ async function buildReportPdf(r) {
   return doc;
 }
 
+function postReport(extra) {
+  const fd = new FormData();
+  fd.append("action", "nfs_checkup");
+  Object.entries(extra).forEach(([k, v]) => fd.append(k, v));
+  return fetch(window.NFS_API.url, { method: "POST", body: fd, credentials: "same-origin" })
+    .then(r => r.json().then(j => ({ ok: r.ok && j.success, j })).catch(() => ({ ok: false, j: {} })));
+}
+
+function setupSendForm(res) {
+  const form = document.getElementById("sendForm");
+  if (!form || !window.NFS_API) return;
+  const input = document.getElementById("sendTo"), msg = document.getElementById("sendMsg"), btn = document.getElementById("sendBtn");
+  input.value = lead.email;
+  form.hidden = false;
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    const to = input.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(to)) { msg.className = "send-msg warn"; msg.textContent = "Please enter a valid email address."; return; }
+    btn.disabled = true; msg.className = "send-msg"; msg.textContent = "Sending…";
+    const r = await postReport({
+      resend: "1", name: `${lead.first} ${lead.last}`.trim(), email: to, phone: lead.phone,
+      consent: "1", website: "", elapsed: "60", score: String(res.score), tier: res.tier.name,
+      cats: JSON.stringify(res.cats), goal: res.goal, pdf: lastReport.doc.output("datauristring")
+    });
+    btn.disabled = false;
+    msg.className = "send-msg " + (r.ok ? "ok" : "warn");
+    msg.textContent = r.ok ? `✓ Sent to ${to}.` : "Sorry, we couldn’t send it just now. Please use Download My PDF.";
+  });
+}
+
 async function deliverResults(res) {
   const box = document.getElementById("deliver");
   const name = `${lead.first} ${lead.last}`.trim();
@@ -2852,6 +2899,7 @@ async function deliverResults(res) {
     const j = await r.json().catch(() => ({}));
     if (!r.ok || !j.success) throw new Error((j.data && j.data.msg) || "send failed");
     box.classList.add("ok");
+    setupSendForm(res);
     box.innerHTML = `✓ Your PDF report has been emailed to <b>${esc(lead.email)}</b>. You can also save a copy now with <b>Download My PDF</b>. Check your spam folder if the email doesn&rsquo;t arrive in a few minutes.`;
   } catch (e) {
     box.classList.add("warn");

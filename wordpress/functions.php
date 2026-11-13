@@ -190,8 +190,29 @@ function nfs_handle_checkup() {
 	$pdf = base64_decode( $raw, true );
 	if ( ! $pdf || strlen( $pdf ) > 2 * MB_IN_BYTES || strncmp( $pdf, '%PDF', 4 ) !== 0 ) { nfs_fail( 'invalid report file' ); }
 
+	$is_resend = ! empty( $_POST['resend'] );
+
 	$focus_i = array_search( min( $cats ), $cats, true );
 	$focus   = min( $cats ) < 20 ? NFS_AREAS[ $focus_i ] : 'None';
+
+	if ( $is_resend ) {
+		$dir  = trailingslashit( get_temp_dir() ) . 'nfs-' . wp_generate_password( 12, false );
+		wp_mkdir_p( $dir );
+		$file = $dir . '/Noble-Checkup-' . trim( preg_replace( '/[^A-Za-z0-9]+/', '-', $name ), '-' ) . '.pdf';
+		file_put_contents( $file, $pdf );
+		$first = strtok( $name, ' ' );
+		$ok    = wp_mail(
+			$email,
+			'Your Financial Protection Checkup results',
+			"Hi $first,\n\nAs requested, your Financial Protection & Retirement Readiness Checkup report is attached as a PDF. Your score is $score out of 100 ($tier).\n\nIf you'd like to talk through your results, reply to this email or call (539) 237-7273.\n\nMaunty Wright\nLife Insurance Broker & Finance Professional\nNoble Finance Solutions\nnoblefinancesolutions.com",
+			array( 'From: ' . NFS_FROM_NAME . ' <' . NFS_FROM_EMAIL . '>', 'Reply-To: Maunty Wright <' . NFS_NOTIFY_EMAIL . '>' ),
+			array( $file )
+		);
+		@unlink( $file );
+		@rmdir( $dir );
+		if ( ! $ok ) { nfs_fail( 'email service unavailable', 500 ); }
+		wp_send_json_success( array( 'sent' => true ) );
+	}
 
 	// Save the lead first so it is never lost, even if email fails.
 	$lines = array();
