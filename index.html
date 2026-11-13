@@ -1600,6 +1600,9 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
 .goal-line {margin:16px 0 0 !important;font-size:14.5px;color:var(--navy)}
 .cover-list div {font-size:11.5px}
 @media(max-width:640px){.answers.many{grid-template-columns:1fr}.lead-grid.two{grid-template-columns:1fr}.q-tip{display:none}}
+
+.dl-btn {display:inline-flex;align-items:center;gap:8px}
+.dl-btn:disabled {opacity:.5;cursor:wait}
 </style>
 <script src="vendor/jspdf.umd.min.js" defer></script>
 </head>
@@ -2648,6 +2651,7 @@ function renderResult() {
     <p class="goal-line"><b>Your top priority:</b> ${esc(goal)}</p>
     <div class="result-actions">
       <a class="btn btn-purple" id="resBook">Book My Review ↗</a>
+      <button type="button" class="btn btn-ghost dl-btn" id="dlBtn" disabled><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg> Download My PDF</button>
       ${low < 20 && riskIdx !== null ? `<a class="btn btn-ghost" href="#risks" id="resRisk">Learn about ${CATS[priority].name}</a>` : ""}
       <button type="button" class="link-btn" id="resRetake">↺ Retake</button>
     </div>
@@ -2822,11 +2826,14 @@ async function deliverResults(res) {
     return;
   }
   lastReport = { doc, fileName };
-  const dl = `<button type="button" class="link-btn" id="dlPdf">Download PDF</button>`;
-  const bindDl = () => document.getElementById("dlPdf").addEventListener("click", () => lastReport.doc.save(lastReport.fileName));
+  const dlBtn = document.getElementById("dlBtn");
+  dlBtn.disabled = false;
+  dlBtn.addEventListener("click", () => lastReport.doc.save(lastReport.fileName));
+  const dl = "";
+  const bindDl = () => {};
 
   if (!window.NFS_API) {               // preview hosting without the email service
-    box.innerHTML = `Your PDF report is ready. ${dl}`; bindDl(); return;
+    box.innerHTML = `Your PDF report is ready. Use <b>Download My PDF</b> to save it.`; return;
   }
   box.innerHTML = `<span class="spin"></span> Emailing your PDF to <b>${esc(lead.email)}</b>&hellip;`;
   const qa = QUESTIONS.map((item, qi) => [item.q, answerText(qi)]);
@@ -2845,10 +2852,10 @@ async function deliverResults(res) {
     const j = await r.json().catch(() => ({}));
     if (!r.ok || !j.success) throw new Error((j.data && j.data.msg) || "send failed");
     box.classList.add("ok");
-    box.innerHTML = `✓ Your PDF report is on its way to <b>${esc(lead.email)}</b>. Check your spam folder if you don&rsquo;t see it in a few minutes. ${dl}`;
+    box.innerHTML = `✓ Your PDF report has been emailed to <b>${esc(lead.email)}</b>. You can also save a copy now with <b>Download My PDF</b>. Check your spam folder if the email doesn&rsquo;t arrive in a few minutes.`;
   } catch (e) {
     box.classList.add("warn");
-    box.innerHTML = `We couldn&rsquo;t email your report right now. You can download it here: ${dl}`;
+    box.innerHTML = `We couldn&rsquo;t email your report right now, but you can save it with <b>Download My PDF</b>. Maunty has your details and will follow up.`;
   }
   bindDl();
 }

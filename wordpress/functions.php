@@ -16,6 +16,28 @@ define( 'NFS_NOTIFY_EMAIL', 'contact@noblefinancesolutions.com' );
 define( 'NFS_FROM_EMAIL', 'contact@noblefinancesolutions.com' );
 define( 'NFS_FROM_NAME', 'Noble Finance Solutions' );
 
+/* Settings → General: "Checkup lead emails" (comma-separated). Defaults to NFS_NOTIFY_EMAIL. */
+add_action( 'admin_init', function () {
+	register_setting( 'general', 'nfs_lead_emails', array(
+		'type'              => 'string',
+		'sanitize_callback' => function ( $v ) {
+			$ok = array_filter( array_map( 'sanitize_email', array_map( 'trim', explode( ',', (string) $v ) ) ), 'is_email' );
+			return implode( ', ', array_unique( $ok ) );
+		},
+	) );
+	add_settings_field( 'nfs_lead_emails', 'Checkup lead emails', function () {
+		$v = get_option( 'nfs_lead_emails', NFS_NOTIFY_EMAIL );
+		echo '<input type="text" class="regular-text" name="nfs_lead_emails" value="' . esc_attr( $v ) . '">';
+		echo '<p class="description">Every Financial Protection Checkup lead (name, email, phone, answers and PDF) is emailed here. Separate several addresses with commas.</p>';
+	}, 'general' );
+} );
+
+function nfs_lead_recipients() {
+	$v    = get_option( 'nfs_lead_emails', NFS_NOTIFY_EMAIL );
+	$list = array_filter( array_map( 'trim', explode( ',', (string) $v ) ), 'is_email' );
+	return $list ? array_values( $list ) : array( NFS_NOTIFY_EMAIL );
+}
+
 const NFS_AREAS = array( 'Emergency Savings', 'Income Protection', 'Life Insurance', 'Debt & Housing', 'Retirement Readiness' );
 
 /* ------------------------------------------------------------------ */
@@ -213,6 +235,7 @@ function nfs_handle_checkup() {
 		"Thank you for taking the Financial Protection & Retirement Readiness Checkup. Your score is $score out of 100 ($tier).\n\n" .
 		"Your personal results report is attached as a PDF. It shows how you scored in each of the five areas, which ones may deserve a closer look, and a copy of your answers.\n\n" .
 		"If you'd like to talk through your results, simply reply to this email or call me at (539) 237-7273. There is no cost and no obligation.\n\n" .
+		"YOUR DETAILS\nName: $name\nEmail: $email\nPhone: $phone\nScore: $score/100 ($tier)\nTop priority: $goal\n\n" . implode( "\n", $lines ) . "\n\nYOUR ANSWERS\n" . $answers_txt . "\n" .
 		"Maunty Wright\nLife Insurance Broker & Finance Professional\nNoble Finance Solutions\nnoblefinancesolutions.com\n\n" .
 		"This checkup is for educational purposes and provides a general snapshot based on your responses. It is not a comprehensive financial, insurance, investment, tax, or legal analysis.";
 	$sent_client = wp_mail( $email, 'Your Financial Protection Checkup results', $client_body, $headers, array( $file ) );
@@ -224,7 +247,7 @@ function nfs_handle_checkup() {
 	$admin_body = "A new Financial Protection & Retirement Readiness Checkup was completed on your website.\n\n" . $summary .
 		"\n\nThey submitted their details to receive results and a follow-up about their Financial Protection Review. Their PDF report is attached.\n" .
 		"See all leads: " . admin_url( 'edit.php?post_type=nfs_lead' );
-	$sent_admin = wp_mail( NFS_NOTIFY_EMAIL, "New Checkup lead: $name ($score/100)", $admin_body, $admin_headers, array( $file ) );
+	$sent_admin = wp_mail( nfs_lead_recipients(), "New Checkup lead: $name ($score/100)", $admin_body, $admin_headers, array( $file ) );
 
 	@unlink( $file );
 	@rmdir( $dir );
