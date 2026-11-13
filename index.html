@@ -1583,6 +1583,23 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
 
 .lead-grid label {justify-content:flex-end}
 .checkup-side .qr-box {flex-direction:column;align-items:flex-start;text-align:left}
+
+/* Readiness checkup additions */
+.quiz-sub {margin:-14px 0 18px !important;color:var(--muted);font-size:14px}
+.quiz-note {font-size:12.5px !important;line-height:1.6;color:var(--muted);background:#f6f7fa;border-radius:12px;padding:12px 14px;margin:0 0 22px !important}
+.answers.many {grid-template-columns:1fr 1fr}
+.answers.many .answer {padding:13px 15px;font-size:14px}
+.answers.multi .answer i {font-size:12px;color:transparent;border:1.5px solid var(--border);background:#fff}
+.answers.multi .answer.chosen i {color:#fff;background:var(--purple);border-color:var(--purple)}
+.quiz-nav > span {display:flex;align-items:center;gap:14px}
+.q-next {padding:11px 18px;font-size:14px}
+.q-next:disabled {opacity:.45;cursor:not-allowed}
+.lead-form.bare {border:0;background:none;padding:0;margin:0}
+.lead-grid.two {grid-template-columns:1fr 1fr}
+.lead-notice {font-size:12.5px !important;line-height:1.6;color:var(--muted);margin:14px 0 4px !important}
+.goal-line {margin:16px 0 0 !important;font-size:14.5px;color:var(--navy)}
+.cover-list div {font-size:11.5px}
+@media(max-width:640px){.answers.many{grid-template-columns:1fr}.lead-grid.two{grid-template-columns:1fr}.q-tip{display:none}}
 </style>
 <script src="vendor/jspdf.umd.min.js" defer></script>
 </head>
@@ -1896,7 +1913,7 @@ a.info-card:hover {transform:translateY(-3px);box-shadow:0 22px 44px #050b1f66}
         </div>
         <div class="side-card">
           <h3>2–3 minutes · Free · No obligation</h3>
-          <p>Covers the five risks most families overlook: life insurance, retirement income, long-term care, debt and final expenses.</p>
+          <p>Covers emergency savings, income protection, life insurance, debt and housing, and retirement readiness.</p>
         </div>
       </aside>
     </div>
@@ -2379,130 +2396,228 @@ if ("IntersectionObserver" in window) {
 })();
 
 // ================= FINANCIAL PROTECTION HEALTH CHECK =================
+// ================= FINANCIAL PROTECTION & RETIREMENT READINESS CHECKUP =================
+// Questions from Maunty's checkup. Five scored areas, 20 points each (total 100).
+const CATS = [
+  { name: "Emergency Savings", risk: null,
+    tip: "An emergency fund covering three to six months of essential expenses helps your household absorb a job loss or an unexpected bill without taking on debt." },
+  { name: "Income Protection", risk: null,
+    tip: "Your ability to earn is often your biggest asset. A plan for illness or injury, such as disability income coverage and savings, keeps your household steady if your paycheck stops." },
+  { name: "Life Insurance", risk: 0,
+    tip: "Coverage through work often ends when the job does and may not be enough. A review can confirm whether your coverage fits the people who depend on you today." },
+  { name: "Debt & Housing", risk: 3,
+    tip: "A plan for your mortgage or rent and major debts, through savings or coverage, can keep your home secure if one income disappears." },
+  { name: "Retirement Readiness", risk: 1,
+    tip: "Consistent saving across different types of accounts, reviewed every few years, helps turn what you have saved into reliable income that lasts as long as you do." }
+];
+
+const NOT_SCORED = -1;
 const QUESTIONS = [
-  { cat: 0, q: "If something happened to you, would your family be okay financially?" },
-  { cat: 0, q: "Is your current life insurance coverage enough for your needs today?" },
-  { cat: 1, q: "Are you confident your retirement savings will last as long as you do?" },
-  { cat: 1, q: "Do you have a strategy to help protect your income from market downturns and inflation?" },
-  { cat: 2, q: "If you needed long-term care, do you know who would provide it and how it would be paid for?" },
-  { cat: 2, q: "Is your savings protected if you, or a spouse, needed extended care?" },
-  { cat: 3, q: "If your income disappeared, is there a plan to cover your mortgage and other debts?" },
-  { cat: 3, q: "Are your home and assets protected so debt wouldn't become a burden for your family?" },
-  { cat: 4, q: "Would money be immediately available to cover final expenses?" },
-  { cat: 4, q: "Have you made arrangements to make the process easier for your family?" }
+  { q: "If your household lost its primary income today, how long could you cover essential expenses from savings?",
+    opts: ["Less than 1 month", "1–2 months", "3–5 months", "6 months or more"], pts: [0, 7, 14, 20], cat: 0 },
+  { q: "How dependent is your household on your income?",
+    opts: ["My household depends heavily on my income", "My income is important, but we could manage temporarily", "My household could comfortably manage without my income"], pts: [0, 5, 10], cat: 1 },
+  { q: "If an illness or injury prevented you from working for several months, how prepared would you be to replace your income?",
+    opts: ["I don’t currently have a plan", "I have some employer benefits or savings, but I’m not sure they would be enough", "I have a clear income-protection strategy"], pts: [0, 5, 10], cat: 1 },
+  { q: "Does anyone financially depend on you?",
+    opts: ["Yes", "No"], pts: [0, 0], cat: NOT_SCORED, key: "dependents" },
+  { q: "Which best describes your current life insurance coverage?",
+    opts: ["I don’t have life insurance / I’m not sure", "I only have coverage through work", "I have personally owned coverage, but I’m not sure whether it’s enough", "I have personally owned coverage and have reviewed whether it meets my current needs"], pts: [0, 7, 13, 20], cat: 2 },
+  { q: "If one household income disappeared, how manageable would your mortgage, rent, and major debts be?",
+    opts: ["Very difficult to manage", "We could manage temporarily, but it would be challenging", "We have a clear plan or sufficient resources to manage them"], pts: [2, 10, 20], cat: 3 },
+  { q: "Which best describes your current long-term financial planning?",
+    opts: ["I’m not currently saving or planning consistently", "I’m making progress toward long-term goals, but my overall strategy could use a review", "I’m consistently saving and have reviewed my overall financial strategy within the last few years"], pts: [0, 5, 10], cat: 4 },
+  { q: "Which types of retirement, investment, or long-term savings do you currently have?",
+    note: "Select all that apply.",
+    multi: true, exclusive: [7, 8, 9],
+    opts: ["Employer retirement account, such as a 401(k), 403(b), or similar plan", "IRA or other personally owned retirement account", "Brokerage or investment account", "CDs, money market accounts, or substantial cash savings", "Existing annuity", "Pension or other retirement benefit", "Other long-term savings", "I don’t currently have significant retirement or investment savings", "None of the above", "I’m not sure"], cat: 4 },
+  { q: "Approximately how much do you currently have across retirement accounts, investments, CDs, and other long-term savings?",
+    note: "Please do not include the value of your primary residence.", optional: true,
+    opts: ["Less than $25,000", "$25,000–$49,999", "$50,000–$99,999", "$100,000–$249,999", "$250,000–$499,999", "$500,000 or more", "I’m not sure / prefer not to say"], pts: [0, 1, 2, 3, 4, 5, 2], cat: 4 },
+  { q: "Which of these financial priorities is most important to you right now?",
+    opts: ["Continuing to grow my retirement savings", "Protecting some of what I’ve accumulated", "Creating income I can rely on later in life", "Making sure I don’t outlive my retirement savings", "Leaving money to family or beneficiaries", "Reducing uncertainty around retirement", "Understanding what options are available to me", "Protecting my family and income", "I’m not sure yet"], pts: [], cat: NOT_SCORED, key: "priority" }
 ];
-const ANSWERS = [
-  { label: "Yes, I'm confident", pts: 10 },
-  { label: "Partly", pts: 5 },
-  { label: "Not sure", pts: 2 },
-  { label: "No", pts: 0 }
-];
+
 const TIERS = [
   { min: 80, name: "WELL PROTECTED", color: "#2f8a63", bg: "#e8f6ef",
-    msg: "You've clearly put thought into protecting your household. A periodic review helps make sure your plan keeps up as life changes." },
+    msg: "You’ve clearly put thought into protecting your household. A periodic review helps make sure your plan keeps up as life changes." },
   { min: 60, name: "SOLID FOUNDATION", color: "#1f5bb5", bg: "#eaf1fb",
     msg: "You have good pieces in place, with a few gaps worth a closer look. Small adjustments now can make a big difference later." },
   { min: 40, name: "ROOM TO STRENGTHEN", color: "#a87a2f", bg: "#fbf2e2",
     msg: "Some important areas are uncovered or uncertain. The good news: these are very solvable with the right plan." },
-  { min: 0, name: "LET'S TALK SOON", color: "#b4537b", bg: "#fbeef3",
-    msg: "Several of life's “what ifs” could leave your family exposed today. A short, no-pressure review is a great first step." }
+  { min: 0, name: "LET’S TALK SOON", color: "#b4537b", bg: "#fbeef3",
+    msg: "Several of life’s “what ifs” could leave your family exposed today. A short, no-pressure review is a great first step." }
 ];
 
 const quiz = document.getElementById("quiz");
-let answers = [];
-let lead = { name: "", email: "", phone: "", consent: false };
+let answers = [];          // number (single), array (multi) or null (skipped)
 let qIndex = 0;
+let started = 0;
+let lead = { first: "", last: "", email: "", phone: "", website: "" };
+
+function esc(v) { return String(v || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+const LETTERS = "ABCDEFGHIJ";
 
 function quizStart() {
   answers = []; qIndex = 0;
   quiz.innerHTML = `
     <div class="quiz-start">
-      <div class="eyebrow">YOUR FINANCIAL PROTECTION SCORE</div>
+      <div class="eyebrow">FINANCIAL PROTECTION &amp; RETIREMENT READINESS CHECKUP</div>
       <h3>10 questions. 2–3 minutes.<br>One clear snapshot.</h3>
-      <p>See where your household is well protected, and where a little planning could go a long way.</p>
+      <p>Answer 10 quick questions to get a snapshot of your current financial protection and long-term preparedness.</p>
       <div class="cover-list">
-        ${RISKS.map((r, i) => `<div><b>${i + 1}</b>${r.short}</div>`).join("")}
+        ${CATS.map((c, i) => `<div><b>${i + 1}</b>${c.name}</div>`).join("")}
       </div>
       <div class="chips"><span>✓ Free</span><span>✓ No obligation</span><span>✓ PDF results by email</span></div>
-      <form class="lead-form" id="leadForm" novalidate>
-        <p class="lead-title">Where should we send your results?</p>
-        <div class="lead-grid">
-          <label>Full name<input type="text" name="name" autocomplete="name" required value="${esc(lead.name)}"></label>
-          <label>Email<input type="email" name="email" autocomplete="email" required value="${esc(lead.email)}"></label>
-          <label>Phone<input placeholder="Optional" type="tel" name="phone" autocomplete="tel" value="${esc(lead.phone)}"></label>
-        </div>
-        <label class="hp" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
-        <label class="consent"><input type="checkbox" name="consent" ${lead.consent ? "checked" : ""} required>
-          <span>Email me a PDF of my results, and I&rsquo;d like Noble Finance Solutions to contact me about them. I understand this is an educational follow-up, not an insurance application, and no purchase is required.</span></label>
-        <p class="lead-error" id="leadError" role="alert"></p>
-        <button class="btn btn-purple" id="quizGo" type="submit">Start My Health Check ↗</button>
-      </form>
+      <p class="quiz-note">Your responses are kept confidential and are used only to provide your results and help prepare for a potential financial protection or retirement review. Please do not enter Social Security numbers, account numbers, passwords, or other sensitive information.</p>
+      <button class="btn btn-purple" id="quizGo" type="button">Start My Checkup ↗</button>
     </div>`;
-  document.getElementById("leadForm").addEventListener("submit", e => {
-    e.preventDefault();
-    const f = e.target, err = document.getElementById("leadError");
-    const name = f.name.value.trim(), email = f.email.value.trim(), phone = f.phone.value.trim();
-    let msg = "";
-    if (name.length < 2) msg = "Please enter your full name.";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) msg = "Please enter a valid email address.";
-    else if (phone && phone.replace(/\D/g, "").length < 7) msg = "Please check your phone number, or leave it blank.";
-    else if (!f.consent.checked) msg = "Please tick the box so we can send your results.";
-    err.textContent = msg;
-    if (msg) return;
-    lead = { name, email, phone, consent: true, website: f.website.value, started: Date.now() };
-    renderQuestion(true);
-  });
+  document.getElementById("quizGo").addEventListener("click", () => { started = Date.now(); renderQuestion(true); });
 }
-
-function esc(v) { return String(v || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 
 function renderQuestion(focus) {
   const item = QUESTIONS[qIndex];
-  const pct = (qIndex / QUESTIONS.length) * 100;
+  const pct = (qIndex / (QUESTIONS.length + 1)) * 100;
+  const sel = answers[qIndex];
+  const label = item.cat >= 0 ? CATS[item.cat].name : (item.key === "priority" ? "Your priorities" : "Your household");
+  const chosen = i => item.multi ? (Array.isArray(sel) && sel.includes(i)) : sel === i;
   quiz.innerHTML = `
     <div class="quiz-meta">
-      <span class="cat">${item.cat + 1} · ${RISKS[item.cat].short}</span>
+      <span class="cat">${esc(label)}</span>
       <span>Question ${qIndex + 1} of ${QUESTIONS.length}</span>
     </div>
     <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}"><span style="width:${pct}%"></span></div>
-    <p class="quiz-q" id="qText">${item.q}</p>
-    <div class="answers" role="group" aria-labelledby="qText">
-      ${ANSWERS.map((a, i) => `<button type="button" class="answer${answers[qIndex] === i ? " chosen" : ""}" data-i="${i}"><i>${"ABCD"[i]}</i>${a.label}</button>`).join("")}
+    <p class="quiz-q" id="qText">${esc(item.q)}</p>
+    ${item.note ? `<p class="quiz-sub">${esc(item.note)}</p>` : ""}
+    <div class="answers${item.opts.length > 4 ? " many" : ""}${item.multi ? " multi" : ""}" role="group" aria-labelledby="qText">
+      ${item.opts.map((o, i) => `<button type="button" class="answer${chosen(i) ? " chosen" : ""}" data-i="${i}" aria-pressed="${chosen(i)}"><i>${item.multi ? "✓" : LETTERS[i]}</i>${esc(o)}</button>`).join("")}
     </div>
     <div class="quiz-nav">
       <button type="button" class="link-btn" id="qBack" ${qIndex === 0 ? "disabled" : ""}>← Back</button>
-      <span>Tip: press A–D</span>
+      <span>
+        ${item.optional ? `<button type="button" class="link-btn" id="qSkip">Skip</button>` : ""}
+        ${item.multi ? `<button type="button" class="btn btn-purple q-next" id="qNext" ${Array.isArray(sel) && sel.length ? "" : "disabled"}>Continue →</button>` : `<span class="q-tip">Tip: press ${LETTERS.slice(0, Math.min(item.opts.length, 4)).split("").join(", ")}…</span>`}
+      </span>
     </div>`;
   quiz.querySelectorAll(".answer").forEach(b => b.addEventListener("click", () => choose(Number(b.dataset.i))));
-  document.getElementById("qBack").addEventListener("click", () => { if (qIndex > 0) { qIndex--; renderQuestion(true); } });
+  document.getElementById("qBack").addEventListener("click", back);
+  const skip = document.getElementById("qSkip");
+  if (skip) skip.addEventListener("click", () => { answers[qIndex] = null; next(); });
+  const nx = document.getElementById("qNext");
+  if (nx) nx.addEventListener("click", next);
   if (focus) quiz.querySelector(".answer").focus({ preventScroll: true });
 }
 
+function back() {
+  if (qIndex > 0) { qIndex--; renderQuestion(true); }
+}
+function next() {
+  if (qIndex < QUESTIONS.length - 1) { qIndex++; renderQuestion(true); }
+  else renderDetails();
+}
+
 function choose(i) {
+  const item = QUESTIONS[qIndex];
+  if (item.multi) {
+    let cur = Array.isArray(answers[qIndex]) ? answers[qIndex].slice() : [];
+    if (cur.includes(i)) cur = cur.filter(x => x !== i);
+    else if (item.exclusive.includes(i)) cur = [i];
+    else cur = cur.filter(x => !item.exclusive.includes(x)).concat(i);
+    answers[qIndex] = cur;
+    quiz.querySelectorAll(".answer").forEach(b => {
+      const on = cur.includes(Number(b.dataset.i));
+      b.classList.toggle("chosen", on); b.setAttribute("aria-pressed", on);
+    });
+    document.getElementById("qNext").disabled = cur.length === 0;
+    return;
+  }
   answers[qIndex] = i;
   quiz.querySelectorAll(".answer").forEach(b => b.classList.toggle("chosen", Number(b.dataset.i) === i));
-  setTimeout(() => {
-    if (qIndex < QUESTIONS.length - 1) { qIndex++; renderQuestion(true); }
-    else renderResult();
-  }, reduceMotion ? 0 : 260);
+  setTimeout(next, reduceMotion ? 0 : 260);
 }
 
 document.addEventListener("keydown", e => {
   if (!quiz.querySelector(".answer") || e.ctrlKey || e.metaKey || e.altKey) return;
-  const k = "abcd".indexOf(e.key.toLowerCase());
+  if (QUESTIONS[qIndex] && QUESTIONS[qIndex].multi) return;
+  if (document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
+  const k = LETTERS.toLowerCase().indexOf(e.key.toLowerCase());
   const rect = quiz.getBoundingClientRect();
-  const visible = rect.top < innerHeight && rect.bottom > 0;
-  if (k >= 0 && visible) choose(k);
+  if (k >= 0 && k < QUESTIONS[qIndex].opts.length && rect.top < innerHeight && rect.bottom > 0) choose(k);
 });
 
+// ---- Step 11: contact details (as on Maunty's checkup) ----
+function renderDetails() {
+  quiz.innerHTML = `
+    <div class="quiz-meta"><span class="cat">Almost done</span><span>Step 11 of 11</span></div>
+    <div class="progress"><span style="width:${(QUESTIONS.length / (QUESTIONS.length + 1)) * 100}%"></span></div>
+    <form class="lead-form bare" id="leadForm" novalidate>
+      <p class="quiz-q">Almost done — where should we send your results?</p>
+      <p class="quiz-sub">Enter your information below to view your Financial Protection Score and get your personalized PDF report by email.</p>
+      <div class="lead-grid two">
+        <label>First name<input type="text" name="first" autocomplete="given-name" required value="${esc(lead.first)}"></label>
+        <label>Last name<input type="text" name="last" autocomplete="family-name" required value="${esc(lead.last)}"></label>
+        <label>Email<input type="email" name="email" autocomplete="email" required value="${esc(lead.email)}"></label>
+        <label>Phone number<input type="tel" name="phone" autocomplete="tel" required value="${esc(lead.phone)}"></label>
+      </div>
+      <label class="hp" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      <p class="lead-notice">Your information will be used to provide your Financial Protection Checkup results and to follow up regarding your Financial Protection Review. We do not sell or share your information for unrelated marketing purposes.</p>
+      <p class="lead-error" id="leadError" role="alert"></p>
+      <div class="quiz-nav">
+        <button type="button" class="link-btn" id="dBack">← Back</button>
+        <button class="btn btn-purple" type="submit">See My Results ↗</button>
+      </div>
+    </form>`;
+  document.getElementById("dBack").addEventListener("click", () => { qIndex = QUESTIONS.length - 1; renderQuestion(true); });
+  const form = document.getElementById("leadForm");
+  form.first.focus({ preventScroll: true });
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const f = e.target, err = document.getElementById("leadError");
+    const v = { first: f.first.value.trim(), last: f.last.value.trim(), email: f.email.value.trim(), phone: f.phone.value.trim(), website: f.website.value };
+    let msg = "";
+    if (!v.first || !v.last) msg = "Please enter your first and last name.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.email)) msg = "Please enter a valid email address.";
+    else if (v.phone.replace(/\D/g, "").length < 10) msg = "Please enter a phone number with area code.";
+    err.textContent = msg;
+    if (msg) return;
+    lead = v;
+    renderResult();
+  });
+}
+
+// ---- Scoring ----
+function scoreAll() {
+  const cats = CATS.map(() => 0);
+  QUESTIONS.forEach((item, qi) => {
+    const a = answers[qi];
+    if (item.cat < 0 || a === null || a === undefined) return;
+    if (item.multi) {
+      const real = a.filter(i => !item.exclusive.includes(i)).length;
+      cats[item.cat] += real >= 3 ? 5 : real === 2 ? 4 : real === 1 ? 3 : 0;
+    } else cats[item.cat] += item.pts[a];
+  });
+  // Skipped savings amount: count as neutral
+  if (answers[8] === null || answers[8] === undefined) cats[4] += 2;
+  // No dependents: life insurance gaps are less urgent
+  if (answers[3] === 1) cats[2] = Math.max(cats[2], 14);
+  return cats.map(v => Math.min(20, v));
+}
+
+function answerText(qi) {
+  const a = answers[qi], item = QUESTIONS[qi];
+  if (a === null || a === undefined) return "Skipped";
+  return Array.isArray(a) ? a.map(i => item.opts[i]).join("; ") : item.opts[a];
+}
+
 function renderResult() {
-  const cats = RISKS.map(() => 0);
-  answers.forEach((a, i) => cats[QUESTIONS[i].cat] += ANSWERS[a].pts);
+  const cats = scoreAll();
   const score = cats.reduce((x, y) => x + y, 0);
   const tier = TIERS.find(t => score >= t.min);
   const low = Math.min(...cats);
   const priority = cats.indexOf(low);
+  const goal = answerText(9);
   const barColor = v => v >= 16 ? "#2f8a63" : v >= 10 ? "#1f5bb5" : v >= 6 ? "#d8ad65" : "#b4537b";
+  const riskIdx = CATS[priority].risk;
 
   quiz.innerHTML = `
     <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -2518,41 +2633,43 @@ function renderResult() {
       </div>
       <div>
         <span class="tier" style="color:${tier.color};background:${tier.bg}">${tier.name}</span>
-        <h3>Your Financial Protection Score is ${score}.</h3>
+        <h3>${esc(lead.first)}, your Financial Protection Score is ${score}.</h3>
         <p>${tier.msg}</p>
       </div>
     </div>
     <div class="cat-bars">
       ${cats.map((v, i) => `
         <div class="cat-bar${i === priority && low < 20 ? " priority" : ""}">
-          <span>${RISKS[i].short}</span>
+          <span>${CATS[i].name}</span>
           <div class="track"><div class="fill" data-w="${v * 5}" style="background:${barColor(v)}"></div></div>
           <em>${v}/20</em>
         </div>`).join("")}
     </div>
+    <p class="goal-line"><b>Your top priority:</b> ${esc(goal)}</p>
     <div class="result-actions">
       <a class="btn btn-purple" id="resBook">Book My Review ↗</a>
-      ${low < 20 ? `<a class="btn btn-ghost" href="#risks" id="resRisk">Explore ${RISKS[priority].short}</a>` : ""}
+      ${low < 20 && riskIdx !== null ? `<a class="btn btn-ghost" href="#risks" id="resRisk">Learn about ${CATS[priority].name}</a>` : ""}
       <button type="button" class="link-btn" id="resRetake">↺ Retake</button>
     </div>
     <div class="deliver" id="deliver" role="status" aria-live="polite"><span class="spin"></span> Preparing your PDF report&hellip;</div>`;
 
   const body = [
     `Hi Maunty,`, ``,
-    `I just took the Financial Protection Health Check on your website and scored ${score}/100 (${tier.name.toLowerCase()}).`, ``,
-    ...cats.map((v, i) => `- ${RISKS[i].short}: ${v}/20`), ``,
+    `I just took the Financial Protection & Retirement Readiness Checkup on your website and scored ${score}/100 (${tier.name.toLowerCase()}).`, ``,
+    ...cats.map((v, i) => `- ${CATS[i].name}: ${v}/20`), ``,
+    `My top priority: ${goal}`, ``,
     `I'd like to book a Financial Protection & Retirement Review.`, ``,
-    `Name:`, `Best phone:`, `Best time to reach me:`
+    `Name: ${lead.first} ${lead.last}`, `Phone: ${lead.phone}`, `Best time to reach me:`
   ].join("\n");
-  const mail = `mailto:contact@noblefinancesolutions.com?subject=${encodeURIComponent(`Health Check score ${score}: booking a review`)}&body=${encodeURIComponent(body)}`;
+  const mail = `mailto:contact@noblefinancesolutions.com?subject=${encodeURIComponent(`Checkup score ${score}: booking a review`)}&body=${encodeURIComponent(body)}`;
   document.getElementById("resBook").href = mail;
   document.getElementById("bookBtn").href = mail;
 
   document.getElementById("resRetake").addEventListener("click", () => { quizStart(); quiz.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" }); });
   const rr = document.getElementById("resRisk");
-  if (rr) rr.addEventListener("click", () => { stopAuto(); showRisk(priority); });
+  if (rr) rr.addEventListener("click", () => { stopAuto(); showRisk(riskIdx); });
 
-  deliverResults({ score, tier, cats, priority, low });
+  deliverResults({ score, tier, cats, priority, low, goal });
 
   requestAnimationFrame(() => requestAnimationFrame(() => {
     document.getElementById("gFg").style.strokeDashoffset = 326.7 * (1 - score / 100);
@@ -2565,12 +2682,11 @@ function renderResult() {
   }));
 }
 
-// ================= HEALTH CHECK: PDF REPORT + EMAIL DELIVERY =================
+// ================= PDF REPORT + EMAIL DELIVERY =================
 const NFS_LOGO = "images/noble-logo-official.png";
 let lastReport = null;
 
 function loadImageData(src, width = 520) {
-  // Draw the logo onto a small white canvas so the PDF stays light (~100 KB).
   return new Promise(res => {
     const img = new Image();
     img.onload = () => {
@@ -2585,6 +2701,9 @@ function loadImageData(src, width = 520) {
   });
 }
 
+// jsPDF's built-in fonts only cover basic Latin: swap curly quotes/dashes.
+const pdfText = t => String(t).replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/[–—]/g, "-").replace(/…/g, "...");
+
 async function buildReportPdf(r) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: "pt", format: "letter", compress: true });
@@ -2592,93 +2711,112 @@ async function buildReportPdf(r) {
   const date = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
   const logo = await loadImageData(NFS_LOGO);
 
-  // header
-  if (logo) doc.addImage(logo, "JPEG", M, 40, 132, 61);
-  doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(...navy);
-  doc.text("Maunty Wright", W - M, 56, { align: "right" });
-  doc.setFont("helvetica", "normal"); doc.setTextColor(...muted);
-  doc.text(["Life Insurance Broker & Finance Professional", "Tulsa, Oklahoma · NPN #22312170", "(539) 237-7273 · contact@noblefinancesolutions.com"], W - M, 69, { align: "right" });
-  doc.setDrawColor(...navy); doc.setLineWidth(1.5); doc.line(M, 112, W - M, 112);
-  doc.setDrawColor(...gold); doc.setLineWidth(2); doc.line(M, 116, M + 80, 116);
+  const header = () => {
+    if (logo) doc.addImage(logo, "JPEG", M, 40, 132, 61);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(...navy);
+    doc.text("Maunty Wright", W - M, 56, { align: "right" });
+    doc.setFont("helvetica", "normal"); doc.setTextColor(...muted);
+    doc.text(["Life Insurance Broker & Finance Professional", "Tulsa, Oklahoma - NPN #22312170", "(539) 237-7273 - contact@noblefinancesolutions.com"], W - M, 69, { align: "right" });
+    doc.setDrawColor(...navy); doc.setLineWidth(1.5); doc.line(M, 112, W - M, 112);
+    doc.setDrawColor(...gold); doc.setLineWidth(2); doc.line(M, 116, M + 80, 116);
+  };
+  const disclaimer = () => {
+    doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); doc.setTextColor(138, 147, 163);
+    doc.text(doc.splitTextToSize("This checkup is for educational purposes and provides a general snapshot based on your responses. It is not a comprehensive financial, insurance, investment, tax, or legal analysis.", W - 2 * M), M, 748);
+  };
 
-  // title
-  let y = 150;
-  doc.setTextColor(...gold); doc.setFont("helvetica", "bold"); doc.setFontSize(9);
-  doc.text("FINANCIAL PROTECTION HEALTH CHECK", M, y);
-  doc.setTextColor(...ink); doc.setFontSize(22);
-  doc.text(`Results for ${r.name}`, M, y + 26);
+  // ---- Page 1: score
+  header();
+  let y = 148;
+  doc.setTextColor(...gold); doc.setFont("helvetica", "bold"); doc.setFontSize(8.5);
+  doc.text("FINANCIAL PROTECTION & RETIREMENT READINESS CHECKUP", M, y);
+  doc.setTextColor(...ink); doc.setFontSize(21);
+  doc.text(pdfText(`Results for ${r.name}`), M, y + 25);
   doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(...muted);
-  doc.text(date, M, y + 44);
+  doc.text(date, M, y + 42);
 
-  // score block
-  y = 220;
-  doc.setFillColor(243, 245, 248); doc.roundedRect(M, y, W - 2 * M, 112, 10, 10, "F");
-  doc.setFillColor(...navy); doc.circle(M + 62, y + 56, 40, "F");
-  doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(28);
-  doc.text(String(r.score), M + 62, y + 62, { align: "center" });
-  doc.setFontSize(7); doc.text("OUT OF 100", M + 62, y + 76, { align: "center" });
-  doc.setTextColor(...navy); doc.setFontSize(10); doc.text(r.tier.name, M + 122, y + 34);
-  doc.setTextColor(...ink); doc.setFontSize(15); doc.text(`Your Financial Protection Score is ${r.score}.`, M + 122, y + 54);
+  y = 210;
+  doc.setFillColor(243, 245, 248); doc.roundedRect(M, y, W - 2 * M, 106, 10, 10, "F");
+  doc.setFillColor(...navy); doc.circle(M + 60, y + 53, 38, "F");
+  doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(27);
+  doc.text(String(r.score), M + 60, y + 59, { align: "center" });
+  doc.setFontSize(7); doc.text("OUT OF 100", M + 60, y + 73, { align: "center" });
+  doc.setTextColor(...navy); doc.setFontSize(10); doc.text(pdfText(r.tier.name), M + 118, y + 32);
+  doc.setTextColor(...ink); doc.setFontSize(14.5); doc.text(`Your Financial Protection Score is ${r.score}.`, M + 118, y + 51);
   doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(...muted);
-  doc.text(doc.splitTextToSize(r.tier.msg.replace(/[“”]/g, '"'), W - 2 * M - 140), M + 122, y + 72);
+  doc.text(doc.splitTextToSize(pdfText(r.tier.msg), W - 2 * M - 136), M + 118, y + 68);
 
-  // category bars
-  y = 362;
+  y = 342;
   doc.setTextColor(...ink); doc.setFont("helvetica", "bold"); doc.setFontSize(12);
   doc.text("Your score by area", M, y);
-  y += 20;
+  y += 18;
   r.cats.forEach((v, i) => {
     const pr = i === r.priority && r.low < 20;
     doc.setFont("helvetica", pr ? "bold" : "normal"); doc.setFontSize(10);
     doc.setTextColor(...(pr ? [180, 83, 123] : ink));
-    doc.text(RISKS[i].short + (pr ? "  (priority)" : ""), M, y + 9);
-    doc.setFillColor(238, 240, 245); doc.roundedRect(M + 170, y, 260, 10, 5, 5, "F");
+    doc.text(CATS[i].name + (pr ? "  (priority)" : ""), M, y + 9);
+    doc.setFillColor(238, 240, 245); doc.roundedRect(M + 175, y, 255, 10, 5, 5, "F");
     const col = v >= 16 ? [47, 138, 99] : v >= 10 ? [31, 91, 181] : v >= 6 ? [216, 173, 101] : [180, 83, 123];
-    if (v > 0) { doc.setFillColor(...col); doc.roundedRect(M + 170, y, Math.max(10, 260 * v / 20), 10, 5, 5, "F"); }
+    if (v > 0) { doc.setFillColor(...col); doc.roundedRect(M + 175, y, Math.max(10, 255 * v / 20), 10, 5, 5, "F"); }
     doc.setTextColor(...muted); doc.setFont("helvetica", "normal");
     doc.text(`${v}/20`, W - M, y + 9, { align: "right" });
-    y += 24;
+    y += 23;
   });
 
-  // areas worth a closer look
-  y += 10;
+  y += 8;
+  doc.setFont("helvetica", "bold"); doc.setFontSize(10.5); doc.setTextColor(...ink);
+  doc.text("Your top priority: ", M, y);
+  doc.setFont("helvetica", "normal"); doc.setTextColor(...navy);
+  doc.text(doc.splitTextToSize(pdfText(r.goal), W - 2 * M - 100), M + 98, y);
+  y += 26;
+
   const focus = r.cats.map((v, i) => ({ v, i })).filter(o => o.v < 16).sort((a, b) => a.v - b.v).slice(0, 2);
   if (focus.length) {
     doc.setTextColor(...ink); doc.setFont("helvetica", "bold"); doc.setFontSize(12);
-    doc.text("Areas worth a closer look", M, y); y += 18;
+    doc.text("Areas worth a closer look", M, y); y += 17;
     focus.forEach(o => {
-      const k = RISKS[o.i];
       doc.setFont("helvetica", "bold"); doc.setFontSize(10.5); doc.setTextColor(...navy);
-      doc.text(k.short, M, y); y += 14;
+      doc.text(CATS[o.i].name, M, y); y += 13;
       doc.setFont("helvetica", "normal"); doc.setFontSize(9.5); doc.setTextColor(...muted);
-      const lines = doc.splitTextToSize(`${k.fact} ${k.questions.map(q => "• " + q).join("  ")}`, W - 2 * M);
-      doc.text(lines, M, y); y += lines.length * 12 + 10;
+      const lines = doc.splitTextToSize(pdfText(CATS[o.i].tip), W - 2 * M);
+      doc.text(lines, M, y); y += lines.length * 12 + 8;
     });
   }
 
-  // next steps
-  y = Math.max(y + 4, 628);
-  doc.setFillColor(...navy); doc.roundedRect(M, y, W - 2 * M, 74, 10, 10, "F");
+  y = Math.max(y + 4, 636);
+  doc.setFillColor(...navy); doc.roundedRect(M, y, W - 2 * M, 70, 10, 10, "F");
   doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(12);
-  doc.text("Next step: a free Financial Protection & Retirement Review", M + 18, y + 26);
+  doc.text("Next step: a free Financial Protection & Retirement Review", M + 18, y + 25);
   doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(214, 222, 238);
-  doc.text("Call (539) 237-7273 or email contact@noblefinancesolutions.com. No pressure, no obligation.", M + 18, y + 46);
-  doc.text("noblefinancesolutions.com", M + 18, y + 61);
+  doc.text("Call (539) 237-7273 or email contact@noblefinancesolutions.com. No pressure, no obligation.", M + 18, y + 44);
+  doc.text("noblefinancesolutions.com", M + 18, y + 58);
+  disclaimer();
 
-  // disclaimer
-  doc.setFontSize(7.5); doc.setTextColor(138, 147, 163);
-  doc.text(doc.splitTextToSize("This checkup is for educational purposes and provides a general snapshot based on your responses. It is not a comprehensive financial, insurance, investment, tax, or legal analysis.", W - 2 * M), M, 742);
+  // ---- Page 2: responses
+  doc.addPage(); header();
+  y = 150;
+  doc.setTextColor(...ink); doc.setFont("helvetica", "bold"); doc.setFontSize(14);
+  doc.text("Your responses", M, y); y += 22;
+  QUESTIONS.forEach((item, qi) => {
+    doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); doc.setTextColor(...ink);
+    const ql = doc.splitTextToSize(pdfText(`${qi + 1}. ${item.q}`), W - 2 * M);
+    doc.text(ql, M, y); y += ql.length * 12;
+    doc.setFont("helvetica", "normal"); doc.setTextColor(...navy);
+    const al = doc.splitTextToSize(pdfText(answerText(qi)), W - 2 * M - 12);
+    doc.text(al, M + 12, y); y += al.length * 12 + 9;
+  });
+  disclaimer();
   return doc;
 }
 
 async function deliverResults(res) {
   const box = document.getElementById("deliver");
-  const data = { ...res, name: lead.name, email: lead.email, phone: lead.phone };
-  const fileName = `Noble-Health-Check-${(lead.name || "Results").replace(/[^A-Za-z0-9]+/g, "-")}.pdf`;
+  const name = `${lead.first} ${lead.last}`.trim();
+  const fileName = `Noble-Checkup-${name.replace(/[^A-Za-z0-9]+/g, "-")}.pdf`;
   let doc;
   try {
     for (let i = 0; i < 50 && !window.jspdf; i++) await new Promise(r => setTimeout(r, 100));
-    doc = await buildReportPdf(data);
+    doc = await buildReportPdf({ ...res, name });
   } catch (e) {
     box.innerHTML = "We couldn&rsquo;t create your PDF just now, but your results are shown above. Use <b>Book My Review</b> to reach Maunty.";
     return;
@@ -2691,14 +2829,16 @@ async function deliverResults(res) {
     box.innerHTML = `Your PDF report is ready. ${dl}`; bindDl(); return;
   }
   box.innerHTML = `<span class="spin"></span> Emailing your PDF to <b>${esc(lead.email)}</b>&hellip;`;
+  const qa = QUESTIONS.map((item, qi) => [item.q, answerText(qi)]);
   const fd = new FormData();
   fd.append("action", "nfs_checkup");
-  fd.append("name", lead.name); fd.append("email", lead.email); fd.append("phone", lead.phone);
+  fd.append("name", name); fd.append("email", lead.email); fd.append("phone", lead.phone);
   fd.append("consent", "1"); fd.append("website", lead.website || "");
-  fd.append("elapsed", String(Math.round((Date.now() - (lead.started || Date.now())) / 1000)));
+  fd.append("elapsed", String(Math.round((Date.now() - (started || Date.now())) / 1000)));
   fd.append("score", String(res.score)); fd.append("tier", res.tier.name);
   fd.append("cats", JSON.stringify(res.cats));
-  fd.append("answers", JSON.stringify(answers));
+  fd.append("goal", res.goal);
+  fd.append("qa", JSON.stringify(qa));
   fd.append("pdf", doc.output("datauristring"));
   try {
     const r = await fetch(window.NFS_API.url, { method: "POST", body: fd, credentials: "same-origin" });
@@ -2708,7 +2848,7 @@ async function deliverResults(res) {
     box.innerHTML = `✓ Your PDF report is on its way to <b>${esc(lead.email)}</b>. Check your spam folder if you don&rsquo;t see it in a few minutes. ${dl}`;
   } catch (e) {
     box.classList.add("warn");
-    box.innerHTML = `We couldn&rsquo;t email your report right now${e.message && e.message !== "send failed" ? ` (${esc(e.message)})` : ""}. You can download it here: ${dl}`;
+    box.innerHTML = `We couldn&rsquo;t email your report right now. You can download it here: ${dl}`;
   }
   bindDl();
 }

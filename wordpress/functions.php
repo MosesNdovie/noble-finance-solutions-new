@@ -16,7 +16,7 @@ define( 'NFS_NOTIFY_EMAIL', 'contact@noblefinancesolutions.com' );
 define( 'NFS_FROM_EMAIL', 'contact@noblefinancesolutions.com' );
 define( 'NFS_FROM_NAME', 'Noble Finance Solutions' );
 
-const NFS_AREAS = array( 'Life Insurance', 'Retirement Income', 'Long-Term Care', 'Debt Protection', 'Final Expense' );
+const NFS_AREAS = array( 'Emergency Savings', 'Income Protection', 'Life Insurance', 'Debt & Housing', 'Retirement Readiness' );
 
 /* ------------------------------------------------------------------ */
 /* Leads stored in WP Admin                                            */
@@ -50,7 +50,8 @@ add_filter( 'manage_nfs_lead_posts_columns', function () {
 		'nfs_email' => 'Email',
 		'nfs_phone' => 'Phone',
 		'nfs_score' => 'Score',
-		'nfs_focus' => 'Priority area',
+		'nfs_focus' => 'Lowest area',
+		'nfs_goal'  => 'Top priority',
 		'date'      => 'Date',
 	);
 } );
@@ -71,6 +72,9 @@ add_action( 'manage_nfs_lead_posts_custom_column', function ( $col, $id ) {
 		case 'nfs_focus':
 			echo esc_html( get_post_meta( $id, '_nfs_focus', true ) );
 			break;
+		case 'nfs_goal':
+			echo esc_html( get_post_meta( $id, '_nfs_goal', true ) );
+			break;
 	}
 }, 10, 2 );
 
@@ -88,7 +92,7 @@ add_action( 'admin_post_nfs_export_leads', function () {
 	header( 'Content-Type: text/csv; charset=utf-8' );
 	header( 'Content-Disposition: attachment; filename=health-check-leads-' . gmdate( 'Y-m-d' ) . '.csv' );
 	$out = fopen( 'php://output', 'w' );
-	fputcsv( $out, array_merge( array( 'Date', 'Name', 'Email', 'Phone', 'Score', 'Result', 'Priority area' ), NFS_AREAS ) );
+	fputcsv( $out, array_merge( array( 'Date', 'Name', 'Email', 'Phone', 'Score', 'Result', 'Lowest area', 'Top priority' ), NFS_AREAS ) );
 	foreach ( $leads as $l ) {
 		$cats = (array) json_decode( (string) get_post_meta( $l->ID, '_nfs_cats', true ), true );
 		$row  = array(
@@ -99,6 +103,7 @@ add_action( 'admin_post_nfs_export_leads', function () {
 			get_post_meta( $l->ID, '_nfs_score', true ),
 			get_post_meta( $l->ID, '_nfs_tier', true ),
 			get_post_meta( $l->ID, '_nfs_focus', true ),
+			get_post_meta( $l->ID, '_nfs_goal', true ),
 		);
 		foreach ( NFS_AREAS as $i => $unused ) { $row[] = isset( $cats[ $i ] ) ? (int) $cats[ $i ] : ''; }
 		// Neutralise spreadsheet formulas in user-entered fields.
@@ -139,14 +144,23 @@ function nfs_handle_checkup() {
 	$score   = max( 0, min( 100, (int) ( $_POST['score'] ?? 0 ) ) );
 	$tier    = sanitize_text_field( wp_unslash( $_POST['tier'] ?? '' ) );
 	$cats    = json_decode( wp_unslash( $_POST['cats'] ?? '[]' ), true );
-	$answers = json_decode( wp_unslash( $_POST['answers'] ?? '[]' ), true );
+	$goal    = sanitize_text_field( wp_unslash( $_POST['goal'] ?? '' ) );
+	$qa_raw  = json_decode( wp_unslash( $_POST['qa'] ?? '[]' ), true );
+	$qa      = array();
+	if ( is_array( $qa_raw ) ) {
+		foreach ( array_slice( $qa_raw, 0, 12 ) as $pair ) {
+			if ( is_array( $pair ) && count( $pair ) === 2 ) {
+				$qa[] = array( sanitize_text_field( substr( (string) $pair[0], 0, 300 ) ), sanitize_text_field( substr( (string) $pair[1], 0, 600 ) ) );
+			}
+		}
+	}
 
 	if ( strlen( $name ) < 2 || strlen( $name ) > 100 ) { nfs_fail( 'please enter your name' ); }
 	if ( ! is_email( $email ) ) { nfs_fail( 'please enter a valid email' ); }
+	if ( strlen( preg_replace( '/\D/', '', $phone ) ) < 10 ) { nfs_fail( 'please enter a phone number' ); }
 	if ( ! $consent ) { nfs_fail( 'consent is required' ); }
 	if ( ! is_array( $cats ) || count( $cats ) !== 5 ) { nfs_fail( 'invalid results' ); }
 	$cats    = array_map( function ( $v ) { return max( 0, min( 20, (int) $v ) ); }, array_values( $cats ) );
-	$answers = is_array( $answers ) ? array_slice( array_map( 'intval', $answers ), 0, 10 ) : array();
 
 	// The PDF report generated in the visitor's browser.
 	$raw = (string) wp_unslash( $_POST['pdf'] ?? '' );
@@ -160,7 +174,9 @@ function nfs_handle_checkup() {
 	// Save the lead first so it is never lost, even if email fails.
 	$lines = array();
 	foreach ( NFS_AREAS as $i => $area ) { $lines[] = $area . ': ' . $cats[ $i ] . '/20'; }
-	$summary = "Name: $name\nEmail: $email\nPhone: " . ( $phone ? $phone : 'not given' ) . "\nScore: $score/100 ($tier)\nPriority area: $focus\n\n" . implode( "\n", $lines );
+	$answers_txt = '';
+	foreach ( $qa as $i => $pair ) { $answers_txt .= ( $i + 1 ) . '. ' . $pair[0] . "\n   " . $pair[1] . "\n"; }
+	$summary = "Name: $name\nEmail: $email\nPhone: $phone\nScore: $score/100 ($tier)\nLowest area: $focus\nTop priority: $goal\n\n" . implode( "\n", $lines ) . "\n\nANSWERS\n" . $answers_txt;
 
 	$lead_id = wp_insert_post( array(
 		'post_type'    => 'nfs_lead',
@@ -176,14 +192,15 @@ function nfs_handle_checkup() {
 		update_post_meta( $lead_id, '_nfs_tier', $tier );
 		update_post_meta( $lead_id, '_nfs_focus', $focus );
 		update_post_meta( $lead_id, '_nfs_cats', wp_json_encode( $cats ) );
-		update_post_meta( $lead_id, '_nfs_answers', wp_json_encode( $answers ) );
+		update_post_meta( $lead_id, '_nfs_goal', $goal );
+		update_post_meta( $lead_id, '_nfs_answers', wp_json_encode( $qa ) );
 	}
 
 	// Write the PDF to a temporary file to attach it.
 	$dir  = trailingslashit( get_temp_dir() ) . 'nfs-' . wp_generate_password( 12, false );
 	wp_mkdir_p( $dir );
 	$safe = preg_replace( '/[^A-Za-z0-9]+/', '-', $name );
-	$file = $dir . '/Noble-Health-Check-' . trim( $safe, '-' ) . '.pdf';
+	$file = $dir . '/Noble-Checkup-' . trim( $safe, '-' ) . '.pdf';
 	file_put_contents( $file, $pdf );
 
 	$first   = strtok( $name, ' ' );
@@ -193,21 +210,21 @@ function nfs_handle_checkup() {
 	);
 	$client_body =
 		"Hi $first,\n\n" .
-		"Thank you for taking the Financial Protection Health Check. Your score is $score out of 100 ($tier).\n\n" .
-		"Your personal results report is attached as a PDF. It shows how you scored in each of the five areas and which ones may deserve a closer look.\n\n" .
+		"Thank you for taking the Financial Protection & Retirement Readiness Checkup. Your score is $score out of 100 ($tier).\n\n" .
+		"Your personal results report is attached as a PDF. It shows how you scored in each of the five areas, which ones may deserve a closer look, and a copy of your answers.\n\n" .
 		"If you'd like to talk through your results, simply reply to this email or call me at (539) 237-7273. There is no cost and no obligation.\n\n" .
 		"Maunty Wright\nLife Insurance Broker & Finance Professional\nNoble Finance Solutions\nnoblefinancesolutions.com\n\n" .
 		"This checkup is for educational purposes and provides a general snapshot based on your responses. It is not a comprehensive financial, insurance, investment, tax, or legal analysis.";
-	$sent_client = wp_mail( $email, 'Your Financial Protection Health Check results', $client_body, $headers, array( $file ) );
+	$sent_client = wp_mail( $email, 'Your Financial Protection Checkup results', $client_body, $headers, array( $file ) );
 
 	$admin_headers = array(
 		'From: ' . NFS_FROM_NAME . ' Website <' . NFS_FROM_EMAIL . '>',
 		'Reply-To: ' . $name . ' <' . $email . '>',
 	);
-	$admin_body = "A new Financial Protection Health Check was completed on your website.\n\n" . $summary .
-		"\n\nThey agreed to be contacted about their results. Their PDF report is attached.\n" .
+	$admin_body = "A new Financial Protection & Retirement Readiness Checkup was completed on your website.\n\n" . $summary .
+		"\n\nThey submitted their details to receive results and a follow-up about their Financial Protection Review. Their PDF report is attached.\n" .
 		"See all leads: " . admin_url( 'edit.php?post_type=nfs_lead' );
-	$sent_admin = wp_mail( NFS_NOTIFY_EMAIL, "New Health Check lead: $name ($score/100)", $admin_body, $admin_headers, array( $file ) );
+	$sent_admin = wp_mail( NFS_NOTIFY_EMAIL, "New Checkup lead: $name ($score/100)", $admin_body, $admin_headers, array( $file ) );
 
 	@unlink( $file );
 	@rmdir( $dir );
